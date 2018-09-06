@@ -2,85 +2,129 @@
 
 #define N 30
 #define N_TEMP 50
+//#define BLANK 3
 
 int scan_numbers(int *massiv, int *sign);
 void print_array(const int *array, int size);
-void add(int *first, int *second, int size);
-void divide_integers(int a, int b, int *result, int accuracy);
+void move_digits(int *arr_, int size, int poryadok);
+int comparison(int *a, int *b, int size);
+void subtract(int *a, int *b, int size);
+void division(int *arr_float, int *arr_int, int *result, int size);
 
 int main()
 {
-    int m_int[N], m_mantissa[N], m_exponent[N_TEMP];//5];// = {0,};
-    int sign_int, sign_mantissa, sign_exponent = 0;
-    int size_int, size_mantissa, size_exponent;
-    /*
-    printf("Input integer:\n");
-    size_int = scan_numbers(m_int, &sign_int);
-    printf("Input mantissa:\n");
+    int m_int[N], m_mantissa[N], m_result[N] = {0,};
+    int sign_int, sign_mantissa = 0;
+    int size_int, size_mantissa;
+    int exponent;
+
+    printf("Input:\n");
     size_mantissa = scan_numbers(m_mantissa, &sign_mantissa);
-    printf("Input exponent:\n");
-    size_exponent = scan_numbers(m_exponent, &sign_exponent);
+    printf("Input:\n");
+    size_int = scan_numbers(m_int, &sign_int);
+    // ввод экспоненты
 
-    //add(m_int, m_mantissa, 6);*/
-    divide_integers(1, 9, m_exponent, N_TEMP);
 
+    division(m_mantissa, m_int, m_result, 5);
     return 0;
 }
 
-void divide_integers(int a, int b, int *result, int accuracy)
+// -1 left, +1 right
+void move_digits(int *arr, int size, int poryadok)
 {
-    int res, left;
-
-    for (int i = 0; i < accuracy; i++)
-        result[i] = 0;
-
-    for (int rank = 2; rank <= accuracy; rank++)
+    if (poryadok <= -1)
     {
-        if (a == 0)
-            break;
-        else if (a > b)
-        {
-            res = 0;
-            left = 0;
-            for(int j = a - b; j >= 0; j -= b)
-            {
-                res++;
-                a = j;
-            }
-            result[rank] = res;
-        }
-        a *= 10;
+        for (int i = poryadok; i < size; i++)
+            arr[i+poryadok] = arr[i];
+        for (int i = size + poryadok; i < size; i++)
+            arr[i] = 0;
     }
-    print_array(result, 50);
+    else if (poryadok >= 1)
+    {
+        for (int i = size - poryadok; i >= 0; i--)
+            arr[i+poryadok] = arr[i];
+        for (int i = poryadok - 1; i >= 0; i--)
+            arr[i] = 0;
+    }
 }
 
-// this function adds up 2 arrays
-void add(int *first, int *second, int size)
+
+void division(int *arr_float, int *arr_int, int *result, int size)
 {
-    int tmp;
-    print_array(first, size);
-    print_array(second, size);
+    int current_pos = 0;
+    int bigger, counter, flag;
 
-    for (int i = size - 1; i >= 2; i--)
+    for (int i = 0; i < size; i++)// i<size??? нужны доп слоты!
     {
-        tmp = first[i] + second[i];
-
-        if (tmp < 10)
-            first[i] = tmp;
-        else
+        bigger = comparison(arr_float, arr_int, size);
+        if (bigger == 0)
         {
-            first[i] = tmp - 10;
-            if (first[i-1] != 9)//а существует ли место под i-1 вообще?
-                first[i-1] += 1;
-            else
+            printf("Equal.");
+            result[current_pos] = 1;
+            //break;
+        }
+        else if (bigger == 1)
+        {
+            printf("Bigger");
+            counter = 0;
+            while (flag = comparison(arr_float, arr_int, size)!= -1)
             {
-                first[i-1] == 0;
-                first[i-2] += 1;
+                if (flag == 0)
+                    break;
+
+                subtract(arr_float, arr_int, size);
+                print_array(arr_float, size);
+                counter++;
             }
+            result[current_pos] = counter;
+            current_pos++;
+            if (flag == 0)
+                break;
+        }
+        else // если высший разряд меньше высшего??
+        {
+            printf("Less.");
+            result[current_pos] = 0;
+            current_pos++;
+            move_digits(arr_float, size, -1);
         }
     }
-    printf("\nresult:\n");
-    print_array(first, size);
+    print_array(result, size);
+}
+
+// compares 2 arrays of digits
+int comparison(int *a, int *b, int size)
+{
+    int res = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (a[i] > b[i])
+        {
+            res = 1;
+            break;
+        }
+        else if (a[i] < b[i])
+        {
+            res = -1;
+            break;
+        }
+    }
+    return res;
+}
+
+// first - second, (first >= second)
+void subtract(int *a, int *b, int size)
+{
+    for (int i = size - 1; i >= 0; i--)
+    {
+        if (a[i] >= b[i])
+            a[i] -= b[i];
+        else
+        {
+            a[i] += 10 - b[i];
+            a[i-1]--;
+        }
+    }
 }
 
 
@@ -115,7 +159,7 @@ void print_array(const int *array, int array_size)
     printf("\n");
     for (int i = 0; i < array_size; i++)
     {
-        printf("%d", array[i]);
+        printf("%d ", array[i]);
     }
 
 }
