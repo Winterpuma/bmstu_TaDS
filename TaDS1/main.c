@@ -1,32 +1,181 @@
+/*
+18 вариант ИУ7-35б
+Задача №1
+
+Смоделировать операцию деления действительного числа на
+целое число длиной до 30 десятичных цифр.
+*/
+
 #include <stdio.h>
 
-#define N 30
-#define N_TEMP 50
-//#define BLANK 3
+#define N 33
+#define FLAG -8928342
 
-int scan_numbers(int *massiv, int *sign);
-void print_array(const int *array, int size);
-void move_digits(int *arr_, int size, int poryadok);
-int comparison(int *a, int *b, int size);
-void subtract(int *a, int *b, int size);
-void division(int *arr_float, int *arr_int, int *result, int size);
+#include "main.h"
 
 int main()
 {
-    int m_int[N], m_mantissa[N], m_result[N] = {0,};
-    int sign_int, sign_mantissa = 0;
-    int size_int, size_mantissa;
-    int exponent;
+    int m_mant[N] = {0,};
+    int m_int[N] = {0,};
+    int m_res[N] = {0,};
 
-    printf("Input:\n");
-    size_mantissa = scan_numbers(m_mantissa, &sign_mantissa);
-    printf("Input:\n");
-    size_int = scan_numbers(m_int, &sign_int);
-    // ввод экспоненты
+    int sign_m, sign_int, sign_res = 1;// -1 - negative, +1 - positive
+    int size_m, size_int = 0;
+    int exponent = 0;
 
+    int flag;
 
-    division(m_mantissa, m_int, m_result, 5);
+    flag = input_float(m_mant, &size_m, &sign_m, &exponent);
+    if (flag < 0)
+        return flag;
+    flag = input_int(m_int, &size_int, &sign_int, &exponent);
+    if (flag < 0)
+        return flag;
+
+    //printf("Exp1: %d", exponent);
+    print_array(m_mant, N);
+    print_array(m_int, N);
+    puts("\n");
+
+    int diff = size_m - size_int;
+    if (diff > 1)
+    {
+        printf("Exp2: %d ", exponent);
+        move_digits(m_int, N, -1*(diff - 1));
+        //exponent += diff - 1;// NOTE exponent!?
+        printf("Exp3: %d ", exponent);
+    }
+
+    clean(m_res, N);
+    division(m_mant, m_int, m_res, N, &exponent);
+    printf("Exp4: %d ", exponent);
+    //printf("\n%d", exponent);
+    print_array(m_res, N);
+    //sign_res = sign_m * sign_int;
     return 0;
+}
+
+// Input float
+int input_float(int *m_m, int *size, int *sign, int *exponent)
+{
+    char b;
+    int flag = 0;
+    int dot = N+1;
+
+    *size = 0;
+    *exponent = FLAG;
+
+    printf("\nInput float:\n");
+    while ((scanf("%c", &b) && (b != EOF) && (b != '\n') && (b != 'E') && (b != 'e')))
+    {
+
+        // Check correctness
+        if (*size != 0 && (b == '+' || b == '-'))
+        {
+            printf("\nWrong input! %d %c", *size, b);
+            flag = -1;
+        }
+        else if (b == '-')
+            *sign = -1;
+        else if (b == '+')
+            *sign = 1;
+        else if ((b <= '9') && (b >= '0'))
+            m_m[(*size)++] = b - 48;
+        else if (b == '.' && dot == N+1)
+            dot = *size;
+        else
+        {
+            printf("\nWrong input");
+            flag = -1;
+        }
+    }
+    printf("%d", dot);
+
+    // Input power
+    printf("\n");
+    if ((b == 'E') || (b == 'e'))
+    {
+        flag = scanf("%d", exponent);
+        if (!flag)
+            return -7;
+    }
+
+    if (*exponent > 99999 || *exponent < -99999)
+    {
+        printf("Exponent should lie within [-99999, 99999]");
+        return -9;
+    }
+
+    while (((b = getchar()) != EOF) && (b != '\n'));
+    normalize(m_m, *size, dot, exponent);
+    return 0;
+}
+
+void normalize_float(int *arr, int size, int dot, int *exponent)
+{
+    int n_dot;
+    for (; n_dot < size, arr[n_dot] == 0; n_dot++); // &&?
+
+    move_digits(arr, size, -n_dot);
+    *exponent -= n_dot - dot; //?
+}
+
+// Input integer
+int input_int(int *m_i, int *size, int *sign, int *exponent)
+{
+    int flag = 0;
+    char b;
+
+    *size = 0;
+
+    printf("\nInput integer:\n");
+
+    while (((b = getchar()) != EOF) && (b != '\n'))
+    {
+        // Check correctness
+        if (*size != 0 && (b == '+' || b == '-'))
+        {
+            printf("\nWrong input!", *size, b);
+            flag = -1;
+        }
+        else if (b == '-')
+            *sign = -1;
+        else if (b == '+')
+            *sign = 1;
+        else if ((b <= '9') && (b >= '0'))
+            m_i[(*size)++] = b - 48;
+        else
+        {
+            printf("\nWrong input");
+            flag = -1;
+        }
+    }
+
+    // Check size of
+    if (*size > 30)
+    {
+        printf("Too many digits");
+        flag = -2;
+    }
+    if (*size == 0)
+    {
+        printf("Nothing inputed!");
+        flag = -2;
+    }
+
+    if (!flag)
+        normalize(m_i, *size, 0, exponent);
+
+    return flag;
+}
+
+void normalize(int *arr, int size, int dot, int *exponent)
+{
+    printf("%d", *exponent);
+    if (dot == 1 && arr[0] == 0)
+        *exponent -= 1;
+    move_digits(arr, N, N-size);
+    *exponent += dot;
 }
 
 // -1 left, +1 right
@@ -48,49 +197,113 @@ void move_digits(int *arr, int size, int poryadok)
     }
 }
 
+// Checks if arr_float / arr_int > 10
+void check_ten(int *arr_float, int *arr_int, int size)
+{
+    int count = 0;
+    int equal;
 
-void division(int *arr_float, int *arr_int, int *result, int size)
+    while (comparison(arr_float, arr_int, size) == 1 && count < 10)
+        count++;
+
+   if (count == 10)
+       move_digits(arr_int, size, -1);// NOTE exponent!?
+
+}
+
+
+// division of 2 arrays of digits
+void division(int *arr_float, int *arr_int, int *result, int size, int *exp)
 {
     int current_pos = 0;
-    int bigger, counter, flag;
+    int equal, counter, flag, flag_zero;
+    int last_digit = FLAG;
+    int beggining_flag = 1; // used to
 
-    for (int i = 0; i < size; i++)// i<size??? нужны доп слоты!
+    check_ten(arr_float, arr_int, size);
+
+    flag_zero = 1;
+    while (current_pos < size + 1)
     {
-        bigger = comparison(arr_float, arr_int, size);
-        if (bigger == 0)
+        equal = comparison(arr_float, arr_int, size);
+
+        // if two arrays are equal
+        if (equal == 0)
         {
-            printf("Equal.");
             result[current_pos] = 1;
-            //break;
+            break;
         }
-        else if (bigger == 1)
+        // if first one is greater
+        else if (equal == 1)
         {
-            printf("Bigger");
+            flag_zero = 0;
             counter = 0;
-            while (flag = comparison(arr_float, arr_int, size)!= -1)
+            // while arr_float bigger than arr_int
+            while ((flag = comparison(arr_float, arr_int, size)) != -1)
             {
                 if (flag == 0)
+                {
+                    counter++;
                     break;
+                }
 
                 subtract(arr_float, arr_int, size);
-                print_array(arr_float, size);
                 counter++;
             }
-            result[current_pos] = counter;
-            current_pos++;
-            if (flag == 0)
+
+            if (current_pos == size) // if overflov happened
+            {
+                rounding(result, size, counter);
                 break;
+            }
+            else
+            {
+                result[current_pos] = counter;
+                current_pos++;
+                beggining_flag = 0;
+                if (flag == 0)
+                    break;
+            }
         }
-        else // если высший разряд меньше высшего??
+        // if first one is smaller
+        else
         {
-            printf("Less.");
-            result[current_pos] = 0;
-            current_pos++;
+            if (flag_zero)
+            {
+                if (beggining_flag)
+                    (*exp)--;
+                else
+                {
+                    result[current_pos] = 0;
+                    current_pos++;
+                }
+            }
+            flag_zero = 1;
             move_digits(arr_float, size, -1);
         }
     }
-    print_array(result, size);
 }
+
+
+// Rounds up number by last digit
+void rounding(int *arr, int size, int last_digit)
+{
+    if (last_digit >= 5)
+    {
+        arr[size-1]++;
+        for (int i = size - 1; i >= 0; i--)
+        {
+            if (arr[i] == 10)
+            {
+                arr[i] == 0;
+                arr[i-1]++;
+            }
+            else
+                break;
+        }
+    }
+}
+
 
 // compares 2 arrays of digits
 int comparison(int *a, int *b, int size)
@@ -112,6 +325,8 @@ int comparison(int *a, int *b, int size)
     return res;
 }
 
+
+// will subtract two arrays
 // first - second, (first >= second)
 void subtract(int *a, int *b, int size)
 {
@@ -128,32 +343,6 @@ void subtract(int *a, int *b, int size)
 }
 
 
-int scan_numbers(int *massiv, int *sign) //добавить поддержку точки в мантисе
-{
-    int count = 0;
-    *sign = 0;
-    char b;
-
-    while (((b = getchar()) != EOF) && (b != '\n'))
-    {
-        if (count != 0 && (b == '+' || b == '-'))
-            return -1;
-        else if (b == '-')
-            *sign = 1;
-        else if (b == '+')
-            *sign = 0;
-        else if (((b - 48) <= 9) && (b - 48) >= 0)
-        {
-            massiv[count] = b - 48;
-            count++;
-        }
-        else
-            return -1;
-    }
-    return count;
-}
-
-
 void print_array(const int *array, int array_size)
 {
     printf("\n");
@@ -163,3 +352,14 @@ void print_array(const int *array, int array_size)
     }
 
 }
+
+
+void clean(int *array, int size)
+{
+    for (int i = 0; i < size; i++)
+        array[i] = 0;
+}
+
+
+//999999999999999999999999999999
+//123456789012345678901234567899
