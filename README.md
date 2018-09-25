@@ -1,2 +1,12 @@
-# bmstu_TaDS
-bmstu Types and Data Structures course (3rd semester)
+# Типы и структуры данных
+BMSTU Types and Data Structures course (3rd semester)  
+ 
+
+Вариант 18.
+
+**№1 Длинная арифметика:**  
+Задание 1  
+Деление вещественного на целое  
+
+**№2 Структуры, обработка таблиц:**  
+Задание 3  
