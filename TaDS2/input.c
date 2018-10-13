@@ -1,6 +1,27 @@
 #include <stdio.h>
 #include <string.h>
 
+void input_bool(char *msg, int *num)
+{
+    *num = -7;
+    printf("%s", msg);
+    while (scanf("%d", num) == 0 || !(*num == 0 || *num == 1))
+    {
+        printf("ERR. Wrong input. Try again: ");
+        fflush(stdin);
+    }
+}
+
+void input_number(char *msg, int *num, int beg, int end)
+{
+    printf("%s (range [%d; %d]): ", msg, beg, end);
+    while (scanf("%d", num) == 0 || !(*num <= end && *num >= beg))
+    {
+        printf("ERR. Wrong input. Try again: ");
+        fflush(stdin);
+    }
+}
+
 void input_string(char *msg, char *str, int max_len)
 {
     char c;

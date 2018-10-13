@@ -1,10 +1,8 @@
 #include <stdio.h>
-#include "operations.h"
+#include "structures.h"
 #include "input.h"
 
-
 #define EXIT -1
-#define LEN_NAME 20
 
 /*
 Вариант 18
@@ -22,35 +20,12 @@ Type жилье = (дом, общежитие);
 поступления.
 */
 
-struct student
-{
-    char *name;
-    int sex;
-    int age;
-    int average_grade;
-    int admission_year;
-
-    union
-    {
-        struct {
-            char *street;
-            int house_num;
-            int appartment_num;
-        } home_adress;
-
-        struct{
-            int hostel_num;
-            int room_num;
-        } hostel;
-
-    } agress;
-
-};
-
 int menu()
 {
     int operation = 0;
     char name[LEN_NAME];
+
+    struct Student tmp_stud;
 
     printf("\nMENU (choose operation):\n\t"
            "1 - Load from file\n\t"
@@ -74,10 +49,25 @@ int menu()
         if (operation == 0)
             return EXIT;
         else if (operation == 1)
-        {    // Load
+        {
             puts("Load");
-            input_string("Input name: ", name, LEN_NAME);
+            input_string("Input file name: ", name, LEN_NAME);
+            if (load_table() == 0) //NOTE
+                printf("Loaded.\n");
+            else
+                printf("Loading error.\n");
+
             printf("%s", name);
+        }
+        else if (operation == 2)
+        {
+            input_string("Input file name: ", name, LEN_NAME);
+            save_table();
+        }
+        else if (operation == 3)
+        {
+            input_student(&tmp_stud);
+            output_student(&tmp_stud);
         }
         else
             printf("Invalid input\n");
