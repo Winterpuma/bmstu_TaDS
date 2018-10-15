@@ -4,6 +4,7 @@
 
 #define EXIT -1
 
+struct StudentTable stTbl = {NULL, 0, 0};
 /*
 Вариант 18
 Tanya
@@ -52,22 +53,22 @@ int menu()
         {
             puts("Load");
             input_string("Input file name: ", name, LEN_NAME);
-            if (load_table() == 0) //NOTE
+            FILE *mm = fopen(name, "r");
+            if (load_table(mm, &stTbl) == 0) //NOTE
                 printf("Loaded.\n");
             else
                 printf("Loading error.\n");
-
-            printf("%s", name);
+            fclose(mm);
         }
         else if (operation == 2)
         {
             input_string("Input file name: ", name, LEN_NAME);
-            save_table();
+            //save_table();
         }
         else if (operation == 3)
         {
-            input_student(&tmp_stud);
-            output_student(&tmp_stud);
+            input_student(&tmp_stud); //Record to table NOTE
+            output_student_console(tmp_stud);
         }
         else
             printf("Invalid input\n");

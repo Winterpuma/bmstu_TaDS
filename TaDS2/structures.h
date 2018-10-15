@@ -3,6 +3,7 @@
 
 #define LEN_NAME 20
 #define LEN_STREET 30
+#define MALLOC_STEP 10
 
 struct Student
 {
@@ -30,9 +31,21 @@ struct Student
 
 };
 
-int load_table();
-int save_table();
 int input_student(struct Student *stud);
-void output_student(struct Student *stud);
+void output_student_console(struct Student stud);
+void output_student_file(FILE *f, struct Student *stud);
+
+struct StudentTable
+{
+    struct Student *ptr_first;
+    int size;
+    int size_max;
+};
+
+int load_table(FILE *f, struct StudentTable *tbl);
+int add_to_table(struct StudentTable *tbl, const struct Student *stud);
+//int load_table(struct StudentTable *tbl, FILE *f);
+int save_table(struct StudentTable *tbl, FILE *f);
+
 
 #endif // OPERATIONS_H
