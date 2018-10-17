@@ -95,9 +95,28 @@ void output_student_console(struct Student stud)
     }
 }
 
-void output_student_file(FILE *f, struct Student *stud)
+void output_student_file(FILE *f, struct Student stud)
 {
-    ;
+    fprintf(f, "%s\n", stud.name);
+    fprintf(f, "%d\n", stud.sex);
+
+    fprintf(f, "%d\n", stud.age);
+    fprintf(f, "%d\n", stud.average_grade);
+    fprintf(f, "%d\n", stud.admission_year);
+
+    fprintf(f, "%d\n", stud.house_type);
+    if (stud.house_type)
+    {
+        fprintf(f, "%d\n", stud.adress.hostel.hostel_num);
+        fprintf(f, "%d\n", stud.adress.hostel.room_num);
+    }
+    else
+    {
+        fprintf(f, "%s\n", stud.adress.home_adress.street);
+        fprintf(f, "%d\n", stud.adress.home_adress.house_num);
+        fprintf(f, "%d\n", stud.adress.home_adress.appartment_num);
+    }
+    fprintf(f, "\n");
 }
 // Student -------------
 
@@ -111,7 +130,7 @@ int load_table(FILE *f, struct StudentTable *tbl)
     if (!f)
         return -1;
 
-    // clear_table(tbl); NOTE
+    clear_table(tbl);
     fscanf(f, "%d\n\n", &size); // обработка корректности NOTE
 
     for (int i = 0; i < size; i++)
@@ -125,8 +144,17 @@ int load_table(FILE *f, struct StudentTable *tbl)
     return 0;
 }
 
-int save_table(struct StudentTable *tbl, FILE *f)
+int save_table(FILE *f, struct StudentTable *tbl)
 {
+    struct Student *ptr_cur = tbl->ptr_first;
+    fprintf(f, "%d\n\n", tbl->size);
+
+    for (int i = 0; i < tbl->size; i++)
+    {
+        output_student_file(f, *ptr_cur);
+        ptr_cur++;
+    }
+
     return 0;
 }
 
@@ -161,6 +189,36 @@ int add_to_table(struct StudentTable *tbl, const struct Student *stud)
 
     return 0;
 }
+
+void output_stTable_console(struct StudentTable *tbl)
+{
+    struct Student *ptr_cur = tbl->ptr_first;
+    printf("\nTable:\n");
+
+    if (!tbl->size)
+        puts("Table is empty!");
+    else
+    {
+        for (int i = 0; i < tbl->size; i++)
+        {
+            output_student_console(*ptr_cur);
+            ptr_cur++;
+        }
+    }
+}
+
+void clear_table(struct StudentTable *tbl)
+{
+    tbl->size = 0;
+    tbl->size_max = 0;
+
+    if (tbl->ptr_first)
+    {
+        free(tbl->ptr_first);
+        tbl->ptr_first = NULL;
+    }
+}
+
 // Table -------------
 
 

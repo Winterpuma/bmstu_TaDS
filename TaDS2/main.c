@@ -48,27 +48,37 @@ int menu()
     {
         printf("Good: %d\n", operation);
         if (operation == 0)
+        {
+            clear_table(&stTbl);
             return EXIT;
+        }
         else if (operation == 1)
         {
             puts("Load");
             input_string("Input file name: ", name, LEN_NAME);
-            FILE *mm = fopen(name, "r");
-            if (load_table(mm, &stTbl) == 0) //NOTE
+            FILE *in = fopen(name, "r");
+            if (load_table(in, &stTbl) == 0) //NOTE
                 printf("Loaded.\n");
             else
                 printf("Loading error.\n");
-            fclose(mm);
+            fclose(in);
         }
         else if (operation == 2)
         {
             input_string("Input file name: ", name, LEN_NAME);
-            //save_table();
+            FILE *out = fopen(name, "w");
+            save_table(out, &stTbl);
+            fclose(out);
         }
         else if (operation == 3)
         {
             input_student(&tmp_stud); //Record to table NOTE
-            output_student_console(tmp_stud);
+            add_to_table(&stTbl, &tmp_stud);
+
+        }
+        else if (operation == 6)
+        {
+            output_stTable_console(&stTbl);
         }
         else
             printf("Invalid input\n");

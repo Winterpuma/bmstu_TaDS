@@ -33,7 +33,7 @@ struct Student
 
 int input_student(struct Student *stud);
 void output_student_console(struct Student stud);
-void output_student_file(FILE *f, struct Student *stud);
+void output_student_file(FILE *f, struct Student stud);
 
 struct StudentTable
 {
@@ -44,8 +44,9 @@ struct StudentTable
 
 int load_table(FILE *f, struct StudentTable *tbl);
 int add_to_table(struct StudentTable *tbl, const struct Student *stud);
-//int load_table(struct StudentTable *tbl, FILE *f);
-int save_table(struct StudentTable *tbl, FILE *f);
+int save_table(FILE *f, struct StudentTable *tbl);
+void clear_table(struct StudentTable *tbl);
+void output_stTable_console(struct StudentTable *tbl);
 
 
 #endif // OPERATIONS_H
