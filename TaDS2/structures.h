@@ -45,8 +45,11 @@ struct StudentTable
 int load_table(FILE *f, struct StudentTable *tbl);
 int add_to_table(struct StudentTable *tbl, const struct Student *stud);
 int save_table(FILE *f, struct StudentTable *tbl);
+int remove_from_table(struct StudentTable *tbl, int i);
 void clear_table(struct StudentTable *tbl);
 void output_stTable_console(struct StudentTable *tbl);
+int cmp_stud(const void *a, const void *b);
+void sort_stud_table(struct StudentTable *tbl);
 
 
 #endif // OPERATIONS_H

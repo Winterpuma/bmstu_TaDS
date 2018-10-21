@@ -65,6 +65,7 @@ struct Student *input_student_file(FILE *f)
     return stud;
 }
 
+
 void output_student_console(struct Student stud)
 {
     printf("\nStudent: %s\n", stud.name);
@@ -94,6 +95,7 @@ void output_student_console(struct Student stud)
         printf("House appartment number: %d\n", stud.adress.home_adress.appartment_num);
     }
 }
+
 
 void output_student_file(FILE *f, struct Student stud)
 {
@@ -144,6 +146,7 @@ int load_table(FILE *f, struct StudentTable *tbl)
     return 0;
 }
 
+
 int save_table(FILE *f, struct StudentTable *tbl)
 {
     struct Student *ptr_cur = tbl->ptr_first;
@@ -157,6 +160,25 @@ int save_table(FILE *f, struct StudentTable *tbl)
 
     return 0;
 }
+
+
+void output_stTable_console(struct StudentTable *tbl)
+{
+    struct Student *ptr_cur = tbl->ptr_first;
+    printf("\nTable:\n");
+
+    if (!tbl->size)
+        puts("Table is empty!");
+    else
+    {
+        for (int i = 0; i < tbl->size; i++)
+        {
+            output_student_console(*ptr_cur);
+            ptr_cur++;
+        }
+    }
+}
+
 
 int add_to_table(struct StudentTable *tbl, const struct Student *stud)
 {
@@ -190,22 +212,19 @@ int add_to_table(struct StudentTable *tbl, const struct Student *stud)
     return 0;
 }
 
-void output_stTable_console(struct StudentTable *tbl)
-{
-    struct Student *ptr_cur = tbl->ptr_first;
-    printf("\nTable:\n");
 
-    if (!tbl->size)
-        puts("Table is empty!");
-    else
+int remove_from_table(struct StudentTable *tbl, int i) //?
+{
+    if (i > 0 && i <= tbl->size)
     {
-        for (int i = 0; i < tbl->size; i++)
-        {
-            output_student_console(*ptr_cur);
-            ptr_cur++;
-        }
+        tbl->ptr_first[i-1] = tbl->ptr_first[tbl->size-1];
+        tbl->size--;
+        return 0;
     }
+    else
+        return -1;
 }
+
 
 void clear_table(struct StudentTable *tbl)
 {
@@ -218,6 +237,18 @@ void clear_table(struct StudentTable *tbl)
         tbl->ptr_first = NULL;
     }
 }
+
+
+int cmp_stud(const void *a, const void *b)
+{
+        return ((struct Student*) a)->admission_year - ((struct Student*) b)->admission_year;
+}
+
+void sort_stud_table(struct StudentTable *tbl)
+{
+        qsort(tbl->ptr_first, tbl->size, sizeof(struct Student), cmp_stud);
+}
+
 
 // Table -------------
 

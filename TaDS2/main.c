@@ -24,6 +24,7 @@ Type жилье = (дом, общежитие);
 int menu()
 {
     int operation = 0;
+    int tmp;
     char name[LEN_NAME];
 
     struct Student tmp_stud;
@@ -75,6 +76,15 @@ int menu()
             input_student(&tmp_stud); //Record to table NOTE
             add_to_table(&stTbl, &tmp_stud);
 
+        }
+        else if (operation == 4)
+        {
+            input_number("Input index of student to delete", &tmp, 1, stTbl.size);
+            remove_from_table(&stTbl, tmp);
+        }
+        else if (operation == 5)
+        {
+            sort_stud_table(&stTbl);
         }
         else if (operation == 6)
         {
