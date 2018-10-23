@@ -244,7 +244,6 @@ void clear_table(struct StudentTable *tbl)
 
 int cmp_stud(const void *a, const void *b)
 {
-    printf("cmp_stud");
     return ((struct Student*) a)->admission_year - ((struct Student*) b)->admission_year;
 }
 

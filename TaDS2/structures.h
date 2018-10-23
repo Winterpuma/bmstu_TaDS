@@ -56,7 +56,7 @@ struct Key
 {
         int key;
         int id;
-};
+}Key;
 
 struct KeyTable
 {
