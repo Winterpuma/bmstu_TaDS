@@ -126,13 +126,14 @@ void output_student_file(FILE *f, struct Student stud)
 int load_table(FILE *f, struct StudentTable *tbl)
 {
     int size;
-    //int flag = 1;
 
     if (!f)
         return -1;
 
     clear_table(tbl);
-    fscanf(f, "%d\n\n", &size); // обработка корректности NOTE
+
+    if (fscanf(f, "%d\n\n", &size) != 1)
+        return -2;
 
     for (int i = 0; i < size; i++)
     {

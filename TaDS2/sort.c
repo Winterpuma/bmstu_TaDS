@@ -6,7 +6,8 @@
 #include "sort.h"
 #include "input.h"
 #include "structures.h"
-#define ITERATIONS 10
+
+#define ITERATIONS 100
 #define FILE_NAME_LEN 30
 
 unsigned long long tick(void)
@@ -25,80 +26,78 @@ void measure_sorting_time()
 
     input_string("Input file name:\n", str, FILE_NAME_LEN);
 
-    if (1)
+    FILE *in = fopen(str, "r");
+
+    if (load_table(in, &tmp_table) == 0)
+        printf("\nSuccessfully loaded\n");
+    else
     {
-        FILE *in = fopen(str, "r");
-        if (load_table(in, &tmp_table) == 0)
-            printf("\nSuccessfully loaded \n");
-        else
-        {
-            printf("\nCan't load!\n");
-            return;
-        }
-        rewind(in);
+        printf("\nCan't load\n");
+        return;
+    }
+    printf("\n                   Table           Keys\n\n");
 
-        // qsort table
-        tms = 0;
-        for (int i = 0; i < ITERATIONS; i++)
-        {
-            tm = tick();
-            sort_stud_table(&tmp_table);
-            tm = tick() - tm;
-            tms += tm;
-            load_table(in, &tmp_table);
-            rewind(in);
-        }
-
-        printf("\n{ Table sorting (qsort) = %lld }\n", tms);
-
-        // qsort key
-        tms = 0;
-
-        for (int i = 0; i < ITERATIONS; i++)
-        {
-            create_key_table(&tmp_table, &tmp_key_table);
-            tm = tick();
-            sort_key_table(&tmp_key_table);
-            tm = tick() - tm;
-            tms += tm;
-        }
-
-        printf("\n{ Key table sorting (qsort) = %lld }\n", tms);
-
-        // mysort table
-        tms = 0;
-
-        for (int i = 0; i < ITERATIONS; i++)
-        {
-            tm = tick();
-            mysort_stud(tmp_table.ptr_first, tmp_table.size);//, sizeof(struct Student), cmp_stud);
-            tm = tick() - tm;
-            tms += tm;
-
-            load_table(in, &tmp_table);
-            rewind(in);
-        }
-
-        printf("\n{ Table sorting (bubble sort) = %lld }\n", tms);
-
-        // mysort key
-        tms = 0;
-
-        for (int i = 0; i < ITERATIONS; i++)
-        {
-            create_key_table(&tmp_table, &tmp_key_table);
-
-            tm = tick();
-            mysort_keys(tmp_key_table.ptr_first, tmp_key_table.n);
-            tm = tick() - tm;
-            tms += tm;
-        }
-
-        printf("\n{ Key table sorting (bubble sort) = %lld }\n", tms);
-        printf("\n{ Table size = %lld B }\n", sizeof(struct Student) * tmp_table.size);
-        printf("\n{ Key table size = %lld B }\n", sizeof(struct Key) * tmp_key_table.n);
+    printf("QSORT   :");
+    //qsort table
+    tms = 0;
+    for (int i = 0; i < ITERATIONS; i++)
+    {
+        tm = tick();
+        sort_stud_table(&tmp_table);
+        tm = tick() - tm;
+        tms += tm;
+        in = fopen(str, "r");
+        load_table(in, &tmp_table);
         fclose(in);
     }
+    printf("%15lld", tms/ITERATIONS);
+
+    //qsort table
+    tms = 0;
+
+    for (int i = 0; i < ITERATIONS; i++)
+    {
+        create_key_table(&tmp_table, &tmp_key_table);
+        tm = tick();
+        sort_key_table(&tmp_key_table);
+        tm = tick() - tm;
+        tms += tm;
+    }
+    printf("%15lld", tms/ITERATIONS);
+
+    printf("\nMYSORT  :");
+    // mysort table
+    tms = 0;
+
+    for (int i = 0; i < ITERATIONS; i++)
+    {
+        tm = tick();
+        mysort_stud(tmp_table.ptr_first, tmp_table.size);
+        tm = tick() - tm;
+        tms += tm;
+        in = fopen(str, "r");
+        load_table(in, &tmp_table);
+        fclose(in);
+    }
+    printf("%15lld", tms/ITERATIONS);
+
+    // mysort key
+    tms = 0;
+
+    for (int i = 0; i < ITERATIONS; i++)
+    {
+        create_key_table(&tmp_table, &tmp_key_table);
+        tm = tick();
+        mysort_keys(tmp_key_table.ptr_first, tmp_key_table.n);
+        tm = tick() - tm;
+        tms += tm;
+    }
+
+    printf("%15lld\n", tms/ITERATIONS);
+
+    printf("\nSIZE    : %14lld B", sizeof(struct Student) * tmp_table.size);
+    printf("%13lld B\n", sizeof(struct Key) * tmp_key_table.n);
+    fclose(in);
 }
 
 
@@ -110,7 +109,7 @@ void swap_students(struct Student *a, struct Student *b)
 }
 
 
-void mysort_stud(struct Student *base, size_t nitems)
+void mysort_stud(struct Student *base, int nitems)
 {
     struct Student *pb = (struct Student *)base;
     struct Student *pe = pb + nitems;

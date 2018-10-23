@@ -67,7 +67,7 @@ int menu()
             puts("Load");
             input_string("Input file name: ", name, LEN_NAME);
             FILE *in = fopen(name, "r");
-            if (load_table(in, &stTbl) == 0) //NOTE
+            if (load_table(in, &stTbl) == 0)
                 printf("Loaded.\n");
             else
                 printf("Loading error.\n");
@@ -82,7 +82,7 @@ int menu()
         }
         else if (operation == 3)
         {
-            input_student(&tmp_stud); //Record to table NOTE
+            input_student(&tmp_stud);
             add_to_table(&stTbl, &tmp_stud);
 
         }
