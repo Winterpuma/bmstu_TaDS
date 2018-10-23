@@ -28,7 +28,6 @@ struct Student
         } hostel;
 
     } adress;
-
 };
 
 int input_student(struct Student *stud);
@@ -65,11 +64,11 @@ struct KeyTable
         int n;
 };
 
-int create_key_table(struct StudentTable* mt, struct KeyTable* mk);
-void clear_key_table(struct KeyTable* mk);
-void sort_key_table(struct KeyTable* mk);
-void print_key_table(const struct KeyTable* mk);
-int print_stud_table_by_key(const struct StudentTable* mt, const struct KeyTable* mk);
-int cmp_key(const void* mk1, const void* mk2);
+int create_key_table(struct StudentTable* arr_stud, struct KeyTable* arr_keys);
+void clear_key_table(struct KeyTable* arr_keys);
+void sort_key_table(struct KeyTable* arr_keys);
+void print_key_table(const struct KeyTable* arr_keys);
+int print_stud_table_by_key(const struct StudentTable* arr_stud, const struct KeyTable* arr_keys);
+int cmp_key(const void *key1, const void *key2);
 
 #endif // OPERATIONS_H

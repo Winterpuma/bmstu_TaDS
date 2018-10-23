@@ -353,7 +353,6 @@ int print_stud_table_by_key(const struct StudentTable* arr_stud, const struct Ke
 
 int cmp_key(const void *key1, const void  *key2)
 {
-    printf("cmp key");
     return ((struct Key*) key1)->key - ((struct Key*) key2)->key;
 }
 
