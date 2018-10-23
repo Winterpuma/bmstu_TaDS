@@ -53,15 +53,14 @@ struct Student *input_student_file(FILE *f)
         if (fscanf(f, "\n%[^\n]\n", stud->adress.home_adress.street) != 1)
         {
             flag = -1;
-            printf("something wrong");
+            //printf("something wrong");
         }
-        printf("SCANF %s\n", stud->adress.home_adress.street);
+        //printf("SCANF %s\n", stud->adress.home_adress.street);
         if (fscanf(f, "%d", &stud->adress.home_adress.house_num) != 1) flag = -1;
         if (fscanf(f, "%d", &stud->adress.home_adress.appartment_num) != 1) flag = -1;
     }
     //fscanf(f, "\n"); // NOTE
     (void)flag;
-    output_student_console(*stud);
     return stud;
 }
 
@@ -245,6 +244,7 @@ void clear_table(struct StudentTable *tbl)
 
 int cmp_stud(const void *a, const void *b)
 {
+    printf("cmp_stud");
     return ((struct Student*) a)->admission_year - ((struct Student*) b)->admission_year;
 }
 
@@ -353,6 +353,7 @@ int print_stud_table_by_key(const struct StudentTable* arr_stud, const struct Ke
 
 int cmp_key(const void *key1, const void  *key2)
 {
+    printf("cmp key");
     return ((struct Key*) key1)->key - ((struct Key*) key2)->key;
 }
 
