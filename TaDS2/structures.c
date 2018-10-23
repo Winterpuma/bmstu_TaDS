@@ -171,9 +171,13 @@ void output_stTable_console(struct StudentTable *tbl)
         puts("Table is empty!");
     else
     {
+        printf("--------------------------------------------\n");
         for (int i = 0; i < tbl->size; i++)
         {
+
+            printf("[ Student %d ]\n", (i + 1));
             output_student_console(*ptr_cur);
+            printf("--------------------------------------------\n");
             ptr_cur++;
         }
     }
@@ -241,12 +245,12 @@ void clear_table(struct StudentTable *tbl)
 
 int cmp_stud(const void *a, const void *b)
 {
-        return ((struct Student*) a)->admission_year - ((struct Student*) b)->admission_year;
+    return ((struct Student*) a)->admission_year - ((struct Student*) b)->admission_year;
 }
 
 void sort_stud_table(struct StudentTable *tbl)
 {
-        qsort(tbl->ptr_first, tbl->size, sizeof(struct Student), cmp_stud);
+    qsort(tbl->ptr_first, tbl->size, sizeof(struct Student), cmp_stud);
 }
 
 
@@ -254,5 +258,109 @@ void sort_stud_table(struct StudentTable *tbl)
 
 
 // ------------- Key Table
+int create_key_table(struct StudentTable* arr_stud, struct KeyTable* arr_keys)
+{
+    struct Student *ptr_s;
+    struct Key *ptr_key;
+
+    clear_key_table(arr_keys);
+
+    arr_keys->n = arr_stud->size;
+
+    arr_keys->ptr_first = (struct Key*) malloc(sizeof(struct Key) * arr_keys->n);
+
+    if (arr_keys->ptr_first == NULL)
+        return -1; // Error in malloc
+    ptr_s = arr_stud->ptr_first;
+    ptr_key = arr_keys->ptr_first;
+    for (int i = 0; i < arr_keys->n; i++)
+    {
+        ptr_key->id = i;
+        ptr_key->key = ptr_s->admission_year;
+        ptr_key++;
+        ptr_s++;
+    }
+
+    return 0;
+}
+
+void clear_key_table(struct KeyTable* arr_keys)
+{
+    if (arr_keys->ptr_first != NULL)
+    {
+        free(arr_keys->ptr_first);
+        arr_keys->ptr_first = NULL;
+    }
+    arr_keys->n = 0;
+}
+
+void print_key_table(const struct KeyTable* arr_keys)
+{
+    printf("\nKey table:\n");
+
+    if (arr_keys->n <= 0)
+        printf("Key table is empty.\n");
+    else
+    {
+        struct Key* ptr_key = arr_keys->ptr_first;
+
+        printf("--------------------------------------------\n");
+        for (int i = 0; i < arr_keys->n; i++)
+        {
+            printf("ID:   %d\n", ptr_key->id + 1);
+            printf("Key:  %d\n", ptr_key->key);
+            printf("--------------------------------------------\n");
+
+            ptr_key++;
+        }
+    }
+
+}
+
+int print_stud_table_by_key(const struct StudentTable* arr_stud, const struct KeyTable* arr_keys)
+{
+    struct Key* ptr_key = arr_keys->ptr_first;
+
+    if (arr_keys-> n != arr_stud->size)
+    {
+        printf("Different sizes of arrays.\nTry to create key table first (7)\n");
+        return -1; // Different sizes
+    }
+
+    printf("\nTable in key order:\n");
+
+    if (arr_stud->size == 0)
+                printf("Table is empty.\n");
+    else
+    {
+        printf("--------------------------------------------\n");
+
+        for (int i = 0; i < arr_keys->n; i++)
+        {
+            if (ptr_key->id<0 || ptr_key->id>(arr_stud->size - 1))
+                return -2; // Invalid ID found
+
+            printf("[ Student %d ]\n", (i + 1));
+            output_student_console(arr_stud->ptr_first[ptr_key->id]);
+            printf("--------------------------------------------\n");
+
+            ptr_key++;
+            }
+    }
+
+    return 0;
+}
+
+int cmp_key(const void *key1, const void  *key2)
+{
+    return ((struct Key*) key1)->key - ((struct Key*) key2)->key;
+}
+
+void sort_key_table(struct KeyTable *arr_keys)
+{
+    qsort(arr_keys->ptr_first, arr_keys->n, sizeof(struct Key), cmp_key);
+}
+
+
 
 // Key Table -------------

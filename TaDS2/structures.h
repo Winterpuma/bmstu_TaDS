@@ -35,6 +35,7 @@ int input_student(struct Student *stud);
 void output_student_console(struct Student stud);
 void output_student_file(FILE *f, struct Student stud);
 
+
 struct StudentTable
 {
     struct Student *ptr_first;
@@ -51,5 +52,24 @@ void output_stTable_console(struct StudentTable *tbl);
 int cmp_stud(const void *a, const void *b);
 void sort_stud_table(struct StudentTable *tbl);
 
+
+struct Key
+{
+        int key;
+        int id;
+};
+
+struct KeyTable
+{
+        struct Key* ptr_first;
+        int n;
+};
+
+int create_key_table(struct StudentTable* mt, struct KeyTable* mk);
+void clear_key_table(struct KeyTable* mk);
+void sort_key_table(struct KeyTable* mk);
+void print_key_table(const struct KeyTable* mk);
+int print_stud_table_by_key(const struct StudentTable* mt, const struct KeyTable* mk);
+int cmp_key(const void* mk1, const void* mk2);
 
 #endif // OPERATIONS_H

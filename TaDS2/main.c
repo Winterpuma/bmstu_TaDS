@@ -5,6 +5,8 @@
 #define EXIT -1
 
 struct StudentTable stTbl = {NULL, 0, 0};
+struct KeyTable keyTbl ={NULL, 0};
+
 /*
 Вариант 18
 Tanya
@@ -47,7 +49,6 @@ int menu()
 
     if (scanf("%d", &operation) == 1)
     {
-        printf("Good: %d\n", operation);
         if (operation == 0)
         {
             clear_table(&stTbl);
@@ -89,6 +90,27 @@ int menu()
         else if (operation == 6)
         {
             output_stTable_console(&stTbl);
+        }
+        else if (operation == 7)
+        {
+            create_key_table(&stTbl, &keyTbl);
+            printf("Key table was created.");
+        }
+        else if (operation == 8)
+        {
+            sort_key_table(&keyTbl);
+        }
+        else if (operation == 9)
+        {
+            print_key_table(&keyTbl);
+        }
+        else if (operation == 10)
+        {
+            print_stud_table_by_key(&stTbl, &keyTbl);
+        }
+        else if (operation == 12)
+        {
+
         }
         else
             printf("Invalid input\n");
