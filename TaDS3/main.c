@@ -6,17 +6,19 @@
 
 #include "input.h"
 #include "alloc.h"
+#include "matrices.h"
+#include "output.h"
 
 int main()
 {
     srand(time(0));
-    int option, lenA1 = 0, lenA2 = 0, lenA3 = 0;
+    int option;//, lenA1 = 0, lenA2 = 0, lenA3 = 0;
     int *matr1, *matr2, *matr3;
     int n, m;
     int *A1, *A2, *A3;
     int *JA1, *JA2, *JA3;
     struct IA *IA1 = create(-1, -1), *IA2 = create(-1, -1), *IA3 = create(-1, -1);
-    int count1 = 0, count2 = 0; // amount of non-zero lines
+    //int count1 = 0, count2 = 0; // amount of non-zero lines //NOTE
     int fill = 20; // percentage of non-zero elements in matrix
 
     printf("This programm will calculate summ of int matrices.\n");
@@ -27,25 +29,32 @@ int main()
     // Creation of two matrices
     if (option)
     {
-        allocate_matr(&matr1, &A1, &JA1, n, m);
-        matrInput(n, m, matr1, A1, JA1, IA1, &lenA1);
-
+        allocate_matrix(&matr1, &A1, &JA1, n, m);
+        input_matrix(&matr1, n, m);
+        print_matrix(matr1, n, m);
+/*
         fflush(stdin);
-        allocate_matr(&matr2, &A2, &JA2, n, m);
-        matrInput(n, m, matr2, A2, JA2, IA2, &lenA2);
+        allocate_matrix(matr2, A2, JA2, n, m);
+        input_matrix(matr2, n, m);*/
     }
     else
     {
-        allocate_gen_matr(&matr1, &A1, &JA1, n, m, &count1, fill);
+        allocate_gen_matrix(&matr1, &A1, &JA1, n, m, fill);
+        printf("\n\n");
+        print_matrix(matr1, n, m);
+
+        /*
         matrDefault(matr1, n, m,A1,JA1,IA1, &lenA1);
         print(n,m, matr1, A1, JA1, IA1, lenA1);
 
-        allocate_gen_matr(&matr2, &A2, &JA2, n, m, &count2, fill);
+        allocate_gen_matr(&matr2, &A2, &JA2, n, m, fill);
         matrDefault(matr2, n, m,A2,JA2,IA2, &lenA2);
         print(n,m, matr2, A2, JA2, IA2, lenA2);
+*/
+
     }
 
-
+/*
     // Addition
     allocate_matr(&matr3, &A3, &JA3, n, m);
 
@@ -64,20 +73,22 @@ int main()
        printf("\nResult matrix:\n");
        printmatrix(matr3, n, m);
     }
-
+*/
     // Free memory
     free_all(IA1);
     free_all(IA2);
     free_all(IA3);
+
     free(A1);
-    free(A2);
-    free(A3);
+    //free(A2);
+    //free(A3);
     free(JA1);
-    free(JA2);
-    free(JA3);
+    //free(JA2);
+    //free(JA3);
+
     free(matr1);
-    free(matr2);
-    free(matr3);
+    //free(matr2);
+    //free(matr3);
 
 
 /*
@@ -92,7 +103,6 @@ int main()
         time_test(25);
     }
 */
-
     return 0;
 }
 
