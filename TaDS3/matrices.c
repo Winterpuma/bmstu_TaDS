@@ -19,8 +19,6 @@ void generate_matrix(int **matr, int n, int m, int fill)
             else
                 (*matr)[i*m+j] = rand() % 10;
         }
-
-    print_matrix(*matr, n, m);
 }
 
 void input_matrix(int **matr, int n, int m)
@@ -29,7 +27,7 @@ void input_matrix(int **matr, int n, int m)
 
     do
     {
-        if (i < n && j < m)
+        if (i >= 0 && j >= 0 && i < n && j < m)
             (*matr)[i*m+j] = value;
         else
             printf("\nERR: wrong index (i: [0; %d], j: [0, %d])", n - 1, m - 1);
@@ -37,9 +35,54 @@ void input_matrix(int **matr, int n, int m)
         printf("\nInput (i j value): ");
         fflush(stdin);
     }
-    while (scanf("%d %d", &i, &j, &value) == 3);
+    while (scanf("%d %d %d", &i, &j, &value) == 3);
+}
 
-    print_matrix(*matr, n, m);
+
+void count_non_zero(const int *matr, int n, int m, int *non_zero_rows, int *non_zero_elements)
+{
+    *non_zero_rows = 0;
+    *non_zero_elements = 0;
+
+    int row_counted = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        row_counted = 0;
+        for (int j = 0; j < m; j++)
+            if (matr[i*m+j] != 0)
+            {
+                (*non_zero_elements)++;
+                if (!row_counted)
+                {
+                    row_counted = 1;
+                    (*non_zero_rows)++;
+                }
+            }
+    }
+
+    printf("\nDBG: non-zero rows: %d, non-zero elements: %d", *non_zero_rows, *non_zero_elements);
+}
+
+/**
+    @param A - array with non-zero elements
+    @param JA - indexes of columns of A elements
+    @param IA - struct of indexes of first elements in rows
+*/
+void convert_matrix(int *matr, int n, int m, int **A, int **JA, struct IA *IA, int non_zero_rows, int non_zero_elements)
+{
+    int A_curr = 0;
+    int An_curr = 0;
+    int first_in_row = 1;
+
+    for (int i = 0; i < n; i++)
+    {
+        first_in_row = 1;
+        for (int j = 0; j < m; j++)
+            if (matr[i*m+j] != 0)
+                ;
+    }
+
 }
 
 /*

@@ -15,9 +15,9 @@ int input_flag(char *msg)
         printf("[y/n]: ");
         scanf("%c", &c);
 
-        if (c == 'y')
+        if (c == 'y' || c == 'Y')
             flag = 2;
-        else if (c == 'n')
+        else if (c == 'n' || c == 'N')
             flag = 1;
     }
     while (!flag);

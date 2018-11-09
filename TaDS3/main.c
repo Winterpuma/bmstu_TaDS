@@ -12,7 +12,13 @@
 int main()
 {
     srand(time(0));
-    int option;//, lenA1 = 0, lenA2 = 0, lenA3 = 0;
+
+    char h;
+    fflush(stdin);
+    scanf("%c", h);
+    printf("%d", h);
+
+    int option;
     int *matr1, *matr2, *matr3;
     int n, m;
     int *A1, *A2, *A3;
@@ -42,6 +48,8 @@ int main()
         allocate_gen_matrix(&matr1, &A1, &JA1, n, m, fill);
         printf("\n\n");
         print_matrix(matr1, n, m);
+        int n_z_el, n_z_rows;
+        count_non_zero(matr1, n, m, &n_z_rows, &n_z_el);
 
         /*
         matrDefault(matr1, n, m,A1,JA1,IA1, &lenA1);
@@ -103,6 +111,9 @@ int main()
         time_test(25);
     }
 */
+    int wait;
+    fflush(stdin);
+    scanf("%d", &wait);
     return 0;
 }
 
