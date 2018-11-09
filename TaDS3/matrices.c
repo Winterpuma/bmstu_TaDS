@@ -5,7 +5,7 @@
 #include "output.h"
 #include "matrices.h"
 
-void generate_matrix(int **matr, int n, int m, int fill)
+void generate_matrix(int *matr, int n, int m, int fill)
 {
     int chance;
     srand(time(0));
@@ -15,20 +15,20 @@ void generate_matrix(int **matr, int n, int m, int fill)
         {
             chance = rand() % 100;
             if (chance > fill)
-                (*matr)[i*m+j] = 0;
+                matr[i*m+j] = 0;
             else
-                (*matr)[i*m+j] = rand() % 10;
+                matr[i*m+j] = rand() % 10;
         }
 }
 
-void input_matrix(int **matr, int n, int m)
+void input_matrix(int *matr, int n, int m)
 {
     int i = 0, j = 0, value = 0;
 
     do
     {
         if (i >= 0 && j >= 0 && i < n && j < m)
-            (*matr)[i*m+j] = value;
+            matr[i*m+j] = value;
         else
             printf("\nERR: wrong index (i: [0; %d], j: [0, %d])", n - 1, m - 1);
 
@@ -60,16 +60,11 @@ void count_non_zero(const int *matr, int n, int m, int *non_zero_rows, int *non_
                 }
             }
     }
-
     printf("\nDBG: non-zero rows: %d, non-zero elements: %d", *non_zero_rows, *non_zero_elements);
 }
 
-/**
-    @param A - array with non-zero elements
-    @param JA - indexes of columns of A elements
-    @param IA - struct of indexes of first elements in rows
-*/
-void convert_matrix(int *matr, int n, int m, int **A, int **JA, struct IA *IA, int non_zero_rows, int non_zero_elements)
+
+void convert_matrix(const int *matr, int n, int m, int *A, int *JA, int *AN, int *ANi, int n_z_el, int n_z_rows)
 {
     int A_curr = 0;
     int An_curr = 0;
@@ -80,10 +75,27 @@ void convert_matrix(int *matr, int n, int m, int **A, int **JA, struct IA *IA, i
         first_in_row = 1;
         for (int j = 0; j < m; j++)
             if (matr[i*m+j] != 0)
-                ;
-    }
+            {
+                A[A_curr] = matr[i*m+j];
+                JA[A_curr] = j;
 
+                if (first_in_row)
+                {
+                    first_in_row = 0;
+                    AN[An_curr] = A_curr;
+                    ANi[An_curr] = i;
+                    An_curr++;
+                }
+                A_curr++;
+            }
+    }
+    dbg_print(matr, n, m, A, JA, AN, ANi, n_z_el, n_z_rows);
 }
+
+//void add_matrices_advanced(int )
+//void add_matrices_simple(const int *matr1, const int *matr2,
+
+
 
 /*
 int matrInput(int n, int m, int *matr, int *A, int *JA, struct IA *IA, int *lenA)
