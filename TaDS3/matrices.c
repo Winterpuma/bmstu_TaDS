@@ -8,7 +8,6 @@
 void generate_matrix(int *matr, int n, int m, int fill)
 {
     int chance;
-    srand(time(0));
 
     for(int i = 0; i < n; i++)
         for(int j = 0; j < m; j++)
@@ -25,14 +24,15 @@ void input_matrix(int *matr, int n, int m)
 {
     int i = 0, j = 0, value = 0;
 
+    fflush(stdin);
     do
     {
         if (i >= 0 && j >= 0 && i < n && j < m)
             matr[i*m+j] = value;
         else
-            printf("\nERR: wrong index (i: [0; %d], j: [0, %d])", n - 1, m - 1);
+            printf("ERR: wrong index (i: [0; %d], j: [0, %d])\n", n - 1, m - 1);
 
-        printf("\nInput (i j value): ");
+        printf("Input (i j value): ");
         fflush(stdin);
     }
     while (scanf("%d %d %d", &i, &j, &value) == 3);

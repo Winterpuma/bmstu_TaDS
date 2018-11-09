@@ -4,11 +4,16 @@
 #include "matrices.h"
 
 
-void allocate_matrices(int **matr1, int **matr2, int **matr3, int size)
+int allocate_matrices(int **matr1, int **matr2, int **matr3, int size)
 {
     *matr1 = calloc(size, sizeof(int));
     *matr2 = calloc(size, sizeof(int));
     *matr3 = calloc(size, sizeof(int));
+
+    if (matr1 && matr2 && matr3)
+        return 0;
+    else
+        return -1;
 }
 
 void allocate_two_arrays(int **a, int **b, int elements)
