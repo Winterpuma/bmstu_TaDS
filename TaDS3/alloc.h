@@ -1,11 +1,9 @@
 #ifndef ALLOC_H
 #define ALLOC_H
 
-void allocate_matrix(int **matr, int **A, int **JA, int n, int m);
-void allocate_gen_matrix(int **matr, int **A, int **JA, int n, int m, int fill);
+void allocate_matrices(int **matr1, int **matr2, int **matr3, int size);
+void allocate_two_arrays(int **a, int **b, int elements);
 
-struct IA* create(int i, int num);
-struct IA* add(struct IA *node, int i, int num);
-void free_all(struct IA *head);
+void free_all(int *matr, int *A, int *JA, int *AN, int *ANi);
 
 #endif // ALLOC_H

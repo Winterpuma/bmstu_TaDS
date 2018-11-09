@@ -2,7 +2,7 @@
 #include "output.h"
 #include "matrices.h"
 
-void print_matrix(int *matr, int n, int m)
+void print_matrix(const int *matr, int n, int m)
 {
     for (int i = 0; i < n; i++)
     {
@@ -12,30 +12,27 @@ void print_matrix(int *matr, int n, int m)
     }
 }
 
-void dbg_print(int n, int m, int *matr, int *A, int *JA, struct IA *IA, int lenA)
+void print_array(int *arr, int len)
 {
-    struct IA *tmp = IA->next;
+    for (int i = 0; i < len; i++)
+        printf("%d ", arr[i]);
+}
 
-
-    printf("A: ");
-    for (int i=0; i<lenA; i++)
-        printf("%d ", A[i]);
+void dbg_print(const int *matr, int n, int m, int *A, int *JA, int *AN, int *ANi, int n_z_el, int n_z_rows)
+{
+    printf("\nA: ");
+    print_array(A, n_z_el);
 
     printf("\nJA: ");
-    for (int i=0; i<lenA; i++)
-        printf("%d ", JA[i]);
+    print_array(JA, n_z_el);
 
-    printf("\n\ni: ");
-    for (; tmp->next != NULL; tmp = tmp->next)
-        printf("%d ", tmp->i);
+    printf("\nAN: ");
+    print_array(AN, n_z_rows);
 
-    printf("\nIA: ");
-    IA = IA->next;
-    for (; IA->next != NULL; IA = IA->next)
-        printf("%d ", IA->Nk);
-    printf("\n");
+    printf("\nANi: ");
+    print_array(ANi, n_z_rows);
 
-    printf("matrix:\n");
+    printf("\nmatrix:\n");
     print_matrix(matr, n, m);
 }
 

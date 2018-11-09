@@ -12,20 +12,18 @@
 int main()
 {
     srand(time(0));
-
-    char h;
-    fflush(stdin);
-    scanf("%c", h);
-    printf("%d", h);
-
     int option;
+    int fill = 20; // percentage of non-zero elements in matrix
+
     int *matr1, *matr2, *matr3;
     int n, m;
+    int n_z_el1, n_z_el2;
+    int n_z_rows1, n_z_rows2;
+
     int *A1, *A2, *A3;
     int *JA1, *JA2, *JA3;
-    struct IA *IA1 = create(-1, -1), *IA2 = create(-1, -1), *IA3 = create(-1, -1);
-    //int count1 = 0, count2 = 0; // amount of non-zero lines //NOTE
-    int fill = 20; // percentage of non-zero elements in matrix
+    int *AN1, *AN2, *AN3;
+    int *ANi1, *ANi2, *ANi3;
 
     printf("This programm will calculate summ of int matrices.\n");
 
@@ -35,21 +33,25 @@ int main()
     // Creation of two matrices
     if (option)
     {
-        allocate_matrix(&matr1, &A1, &JA1, n, m);
-        input_matrix(&matr1, n, m);
+        matr1 = calloc(n*m, sizeof(int));
+        input_matrix(matr1, n, m);
         print_matrix(matr1, n, m);
-/*
-        fflush(stdin);
-        allocate_matrix(matr2, A2, JA2, n, m);
-        input_matrix(matr2, n, m);*/
+        count_non_zero(matr1, n, m, &n_z_rows1, &n_z_el1);
+
+        allocate_two_arrays(&A1, &JA1, n_z_el1);
+        allocate_two_arrays(&AN1, &ANi1, n_z_rows1);
+        convert_matrix(matr1, n, m, A1, JA1, AN1, ANi1, n_z_el1, n_z_rows1);
+
+// Second
     }
     else
     {
-        allocate_gen_matrix(&matr1, &A1, &JA1, n, m, fill);
+        matr1 = calloc(n*m, sizeof(int));
+        generate_matrix(matr1, n, m, fill);
+
         printf("\n\n");
         print_matrix(matr1, n, m);
-        int n_z_el, n_z_rows;
-        count_non_zero(matr1, n, m, &n_z_rows, &n_z_el);
+        count_non_zero(matr1, n, m, &n_z_rows1, &n_z_el1);
 
         /*
         matrDefault(matr1, n, m,A1,JA1,IA1, &lenA1);
@@ -83,20 +85,7 @@ int main()
     }
 */
     // Free memory
-    free_all(IA1);
-    free_all(IA2);
-    free_all(IA3);
-
-    free(A1);
-    //free(A2);
-    //free(A3);
-    free(JA1);
-    //free(JA2);
-    //free(JA3);
-
-    free(matr1);
-    //free(matr2);
-    //free(matr3);
+    free_all(matr1, A1, JA1, AN1, ANi1);
 
 
 /*

@@ -2,7 +2,8 @@
 #define OUTPUT_H
 #include "matrices.h"
 
-void print_matrix(int *matr, int n, int m);
-void dbg_print(int n, int m, int *matr, int *A, int *JA, struct IA *IA, int lenA);
+void print_matrix(const int *matr, int n, int m);
+void print_array(int *arr, int len);
+void dbg_print(const int *matr, int n, int m, int *A, int *JA, int *AN, int *ANi, int n_z_el, int n_z_rows);
 
 #endif // OUTPUT_H

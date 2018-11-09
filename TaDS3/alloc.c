@@ -3,56 +3,25 @@
 #include <strings.h>
 #include "matrices.h"
 
-void allocate_matrix(int **matr, int **A, int **JA, int n, int m)
+
+void allocate_matrices(int **matr1, int **matr2, int **matr3, int size)
 {
-    int size = n * m;
-    *matr = calloc(size, sizeof(int));
-    *A = malloc(size * sizeof(int));
-    *JA = malloc(size * sizeof(int));
+    *matr1 = calloc(size, sizeof(int));
+    *matr2 = calloc(size, sizeof(int));
+    *matr3 = calloc(size, sizeof(int));
 }
 
-void allocate_gen_matrix(int **matr, int **A, int **JA, int n, int m, int fill)
+void allocate_two_arrays(int **a, int **b, int elements)
 {
-    int size = n * m;
-    *matr = calloc(size, sizeof(int));
-    generate_matrix(matr, n, m, fill);
-    *A = malloc(size * sizeof(int));
-    *JA = malloc(size * sizeof(int));
+    *a = malloc(elements * sizeof(int));
+    *b = malloc(elements * sizeof(int));
 }
 
-struct IA* create(int i, int num)
+void free_all(int *matr, int *A, int *JA, int *AN, int *ANi)
 {
-    //printf("1 in create: %d %d sizeof IA %d\n", i, num, sizeof(struct IA));
-    struct IA *node = malloc(sizeof(struct IA));
-    if (node)
-    {
-        node->Nk = num;
-        node->i = i;
-        node->next = NULL;
-    }
-
-    return node;
-}
-
-// Функция добавления элемента в стек
-struct IA* add(struct IA *node, int i, int num)
-{
-    struct IA *curr;
-    curr = create(i, num);
-    if (curr == NULL)
-        return NULL;
-    node->next = curr;
-    return curr;
-}
-
-// Освобождение всех эл-тов стека
-void free_all(struct IA *head)
-{
-    struct IA *nxt;
-
-    for (; head; head = nxt)
-    {
-        nxt = head->next;
-        free(head);
-    }
+    free(matr);
+    free(A);
+    free(JA);
+    free(AN);
+    free(ANi);
 }
