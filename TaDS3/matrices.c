@@ -5,6 +5,7 @@
 #include "output.h"
 #include "matrices.h"
 
+
 void generate_matrix(int *matr, int n, int m, int fill)
 {
     int chance;
@@ -19,6 +20,7 @@ void generate_matrix(int *matr, int n, int m, int fill)
                 matr[i*m+j] = rand() % 10;
         }
 }
+
 
 void input_matrix(int *matr, int n, int m)
 {
@@ -60,7 +62,6 @@ void count_non_zero(const int *matr, int n, int m, int *non_zero_rows, int *non_
                 }
             }
     }
-    printf("\nDBG: non-zero rows: %d, non-zero elements: %d", *non_zero_rows, *non_zero_elements);
 }
 
 
@@ -89,199 +90,74 @@ void convert_matrix(const int *matr, int n, int m, int *A, int *JA, int *AN, int
                 A_curr++;
             }
     }
-    dbg_print(matr, n, m, A, JA, AN, ANi, n_z_el, n_z_rows);
 }
 
-//void add_matrices_advanced(int )
-//void add_matrices_simple(const int *matr1, const int *matr2,
 
-
-
-/*
-int matrInput(int n, int m, int *matr, int *A, int *JA, struct IA *IA, int *lenA)
+void add_matrices_simple(const int *matr1, const int *matr2, int *matr3, int n, int m)
 {
-    int i, j, t;
-    float t1;
-    struct IA *tmp, *tmp1, *tmp2;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            matr3[i*m+j] = matr1[i*m+j] + matr2[i*m+j];
+}
 
-    do
+
+void add_matrices_advanced(const int *A1, const int *JA1, const int *AN1, const int *ANi1, int n_z_el1, int n_z_rows1,
+                           const int *A2, const int *JA2, const int *AN2, const int *ANi2, int n_z_el2, int n_z_rows2,
+                           int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3)
+{
+    *n_z_el3 = 0;
+    *n_z_rows3 = 0;
+    int curr_i1 = 0, curr_i2 = 0;
+
+    while ((curr_i1 < n_z_rows1) && (curr_i2 < n_z_rows2))
     {
-        printf("\nInput (i j value): ");
-        while (1)
+        if (ANi1[curr_i1] < ANi2[curr_i2])
         {
-            if (scanf("%d %d %d", &i, &j, &t1) != 3)
-            {
-                printf("\nERR: try again: ");
-                fflush(stdin);
-            }
-            else if (i < 0 || i >= n || j < 0 || j > m)
-                printf("ERR: index out of range. Try again \n");
-            else break;
+            copy_row(A1, JA1, AN1, ANi1, curr_i1, n_z_rows1, n_z_el1, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
+            curr_i1++;
         }
-
-        matr[i*m+j] = t1;
-
-        t1 = matr[i*m+j];
-        tmp = IA;
-        while (tmp != NULL)
+        else if (ANi2[curr_i2] < ANi1[curr_i1])
         {
-            if (tmp->i != i)
-            {
-                tmp1 = tmp;
-                tmp = tmp->next;
-            }
-            else
-            {
-                if (JA[tmp->Nk] > j)
-                {
-                   for (int k=*lenA; k>tmp->Nk; k--)
-                   {
-                       A[k] = A[k-1];
-                       JA[k] = JA[k-1];
-                       tmp2 = IA;
-                       while (tmp2 != NULL)
-                       {
-                           if (tmp2->Nk != k-1 || tmp->Nk == k-1)
-                               tmp2 = tmp2->next;
-                           else
-                           {
-                               tmp2->Nk += 1;
-                               break;
-                           }
-                       }
-                   }
-                   A[tmp->Nk] = t1;
-                   JA[tmp->Nk] = j;
-                }
-                else
-                {
-                    for (int k=*lenA; k>tmp->Nk+1; k--)
-                    {
-                        A[k] = A[k-1];
-                        JA[k] = JA[k-1];
-                        tmp2 = IA;
-                        while (tmp2 != NULL)
-                        {
-                            if (tmp2->Nk != k-1)
-                                tmp2 = tmp2->next;
-                            else
-                            {
-                                tmp2->Nk += 1;
-                                break;
-                            }
-                        }
-                    }
-                    A[tmp->Nk+1] = t1;
-                    JA[tmp->Nk+1] = j;
-                }
-                break;
-            }
+            copy_row(A2, JA2, AN2, ANi2, curr_i2, n_z_rows2, n_z_el2, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
+            curr_i2++;
         }
-        if (tmp == NULL)
+        else // if equal
         {
-            A[*lenA] = t1;
-            JA[*lenA] = j;
-            tmp1 = add(tmp1, i, *lenA);
+            ;
+            curr_i1++;
+            curr_i2++;
         }
-
-        *lenA += 1;
-
-        printf("Continue input? (any letter - no, numbers - yes):\n");
     }
-    while (scanf("%d", &t) != 0);
 
-    while (IA->next != NULL)
-        IA = IA->next;
-    add(IA, n, *lenA);
-
-    return 0;
+    // if some elements left in 1 or 2
 }
 
 
-void matrDefault(float *matr, int n, int m,float *A, int *JA, struct IA *IA, int *lenA)
+// Copy row from 1st matrix to second
+void copy_row(const int *A1, const int *JA1, const int *AN1, const int *ANi1, int curr_i1, int max_i1, int max_iel,
+              int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3)
 {
-    struct IA *tmp, *tmp1, *tmp2;
-    int t1;
+    // Determine indexes of elements to copy
+    int i_from = AN1[curr_i1];
+    int i_to;
 
-    for(int i = 0; i < n; i++)
-        for(int j = 0; j < m; j++)
-        {
-            if (matr[i*m+j] != 0)
-            {
-                //A[k] = matr[i*m+j];
-                //JA[k] = j;
-                //k++;
-                t1 = matr[i*m+j];
-                tmp = IA;
-                while (tmp != NULL)
-                {
-                    if (tmp->i != i)
-                    {
-                        tmp1 = tmp;
-                        tmp = tmp->next;
-                    }
-                    else
-                    {
-                        if (JA[tmp->Nk] > j)
-                        {
-                           for (int k=*lenA; k>tmp->Nk; k--)
-                           {
-                               A[k] = A[k-1];
-                               JA[k] = JA[k-1];
-                               tmp2 = IA;
-                               while (tmp2 != NULL)
-                               {
-                                   if (tmp2->Nk != k-1 || tmp->Nk == k-1)
-                                       tmp2 = tmp2->next;
-                                   else
-                                   {
-                                       tmp2->Nk += 1;
-                                       break;
-                                   }
-                               }
-                           }
-                           A[tmp->Nk] = t1;
-                           JA[tmp->Nk] = j;
-                        }
-                        else
-                        {
-                            for (int k=*lenA; k>tmp->Nk+1; k--)
-                            {
-                                A[k] = A[k-1];
-                                JA[k] = JA[k-1];
-                                tmp2 = IA;
-                                while (tmp2 != NULL)
-                                {
-                                    if (tmp2->Nk != k-1)
-                                        tmp2 = tmp2->next;
-                                    else
-                                    {
-                                        tmp2->Nk += 1;
-                                        break;
-                                    }
-                                }
-                            }
-                            A[tmp->Nk+1] = t1;
-                            JA[tmp->Nk+1] = j;
-                        }
-                        break;
-                    }
-                }
-                if (tmp == NULL)
-                {
-                    A[*lenA] = t1;
-                    JA[*lenA] = j;
-                    tmp1 = add(tmp1, i, *lenA);
-                }
+    if (current_i1 == maxi1 - 1) // if last non-zero row
+        i_to = max_iel;
+    else
+        i_to = AN1[curr_i1 + 1];
+    //NOTE do not take last one
 
-                *lenA += 1;
 
-            }
-        }
-    while (IA->next != NULL)
-        IA = IA->next;
-    add(IA, n, *lenA);
+    // Fill
+    ANi3[*n_z_rows3] = ANi1[curr_i1];
+    AN3[*n_z_rows3] = *n_z_el3;
+
+    for (int i = i_from; i < i_to; i++)
+    {
+        A3[*n_z_el3] = A1[i];
+        JA3[*n_z_el3] = JA[i];
+        (*n_z_el3)++;
+    }
+
+    (*n_z_rows3)++;
 }
-
-*/
-
