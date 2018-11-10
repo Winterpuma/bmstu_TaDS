@@ -14,5 +14,8 @@ void add_matrices_advanced(const int *A1, const int *JA1, const int *AN1, const 
                            int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3);
 void copy_row(const int *A1, const int *JA1, const int *AN1, const int *ANi1, int curr_i1, int max_i1, int max_iel,
               int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3);
+void add_rows(const int *A1, const int *JA1, const int *AN1, const int *ANi1, int curr_i1, int max_i1, int max_i1el,
+              const int *A2, const int *JA2, const int *AN2, const int *ANi2, int curr_i2, int max_i2, int max_i2el,
+              int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3);
 
 #endif // MATRICES_H

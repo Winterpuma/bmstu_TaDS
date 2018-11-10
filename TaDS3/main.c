@@ -21,8 +21,8 @@ int main()
 
     int *matr1, *matr2, *matr3;
     int n, m;
-    int n_z_el1, n_z_el2;
-    int n_z_rows1, n_z_rows2;
+    int n_z_el1, n_z_el2, n_z_el3;
+    int n_z_rows1, n_z_rows2, n_z_rows3;
 
     int *A1, *A2, *A3;
     int *JA1, *JA2, *JA3;
@@ -55,42 +55,35 @@ int main()
         generate_matrix(matr2, n, m, fill);
     }
 
+    puts("\nFirst:");
     print_matrix(matr1, n, m);
     count_non_zero(matr1, n, m, &n_z_rows1, &n_z_el1);
     allocate_two_arrays(&A1, &JA1, n_z_el1);
     allocate_two_arrays(&AN1, &ANi1, n_z_rows1);
     convert_matrix(matr1, n, m, A1, JA1, AN1, ANi1, n_z_el1, n_z_rows1);
 
-    puts("\n");
+    puts("\nSecond:");
     print_matrix(matr2, n, m);
     count_non_zero(matr2, n, m, &n_z_rows2, &n_z_el2);
     allocate_two_arrays(&A2, &JA2, n_z_el2);
     allocate_two_arrays(&AN2, &ANi2, n_z_rows2);
     convert_matrix(matr2, n, m, A2, JA2, AN2, ANi2, n_z_el2, n_z_rows2);
 
-/*
+
     // Addition
+    puts("\nResult:");
+    allocate_two_arrays(&A3, &JA3, n_z_el1 + n_z_el2);
+    allocate_two_arrays(&AN3, &ANi3, n_z_rows1 + n_z_rows2);
+    add_matrices_simple(matr1, matr2, matr3, n, m);
+    add_matrices_advanced(A1, JA1, AN1, ANi1, n_z_el1, n_z_rows1, A2, JA2, AN2, ANi2, n_z_el2, n_z_rows2,
+                          A3, JA3, AN3, ANi3, &n_z_el3, &n_z_rows3);
+    //print_matrix(matr3, n, m);
+    dbg_print(matr3, n, m, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
 
-    Plus_R(n, m, A1, A2, JA1, JA2, IA1, IA2, lenA1, lenA2, A3, JA3, IA3, &lenA3);
-    summtrix(matr1, matr2, matr3, n, m);
-    print(n,m, matr3, A3, JA3, IA3, lenA1);
-
-    // Output results
-    option = input_flag("Print matrices ");
-    if (option)
-    {
-       printf("\nFirst matrix:\n");
-       printmatrix(matr1, n, m);
-       printf("\nSecord matrix:\n");
-       printmatrix(matr2, n, m);
-       printf("\nResult matrix:\n");
-       printmatrix(matr3, n, m);
-    }
-*/
     // Free memory
     free_all(matr1, A1, JA1, AN1, ANi1);
     free_all(matr2, A2, JA2, AN2, ANi2);
-    free(matr3);
+    free_all(matr3, A3, JA3, AN3, ANi3);
 
 /*
     // Time testing
