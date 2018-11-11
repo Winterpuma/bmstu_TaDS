@@ -193,7 +193,6 @@ void add_rows(const int *A1, const int *JA1, struct IA *IA1, int max_i1el,
               const int *A2, const int *JA2, struct IA *IA2, int max_i2el,
               int *A3, int *JA3, struct IA *IA3, int *n_z_el3)
 {
-
     // Allocate new row
     if (IA3->i != -1)
     {
@@ -248,11 +247,13 @@ void add_rows(const int *A1, const int *JA1, struct IA *IA1, int max_i1el,
     {
         JA3[*n_z_el3] = JA1[i1];
         A3[*n_z_el3] = A1[i1++];
+        (*n_z_el3)++;
     }
 
     while (i2 < i2_to)
     {
         JA3[*n_z_el3] = JA2[i2];
         A3[*n_z_el3] = A2[i2++];
+        (*n_z_el3)++;
     }
 }

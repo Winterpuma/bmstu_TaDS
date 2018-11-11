@@ -24,13 +24,20 @@ void allocate_two_arrays(int **a, int **b, int elements)
     *b = malloc(elements * sizeof(int));
 }
 
+void free_list(struct IA *head)
+{
+    struct IA *next;
 
+    for (; head; head = next)
+    {
+        next = head->next;
+        free(head);
+    }
+}
 void free_all(int *matr, int *A, int *JA, struct IA *IA)
 {
     free(matr);
     free(A);
     free(JA);
-
-    // NOTE Free IA
-    IA->i = 0;
+    free_list(IA);
 }

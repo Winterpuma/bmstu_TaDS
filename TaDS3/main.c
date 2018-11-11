@@ -8,7 +8,7 @@
 #include "alloc.h"
 #include "matrices.h"
 #include "output.h"
-
+#include "time_testing.h"
 
 int main()
 {
@@ -115,18 +115,18 @@ int main()
     free_all(matr2, A2, JA2, IA2);
     free_all(matr3, A3, JA3, IA3);
 
-/*
+
     // Time testing
     fflush(stdin);
     option = input_flag("Time testing: ");
 
     if (option)
     {
-        time_test(5);
-        time_test(15);
-        time_test(25);
+        time_testing(100, 100, 5);
+        time_testing(100, 100, 20);
+        time_testing(100, 100, 50);
     }
-*/
+
 
     return 0;
 }
