@@ -12,13 +12,30 @@ void print_matrix(const int *matr, int n, int m)
     }
 }
 
-void print_array(int *arr, int len)
+void print_array(const int *arr, int len)
 {
     for (int i = 0; i < len; i++)
         printf("%d ", arr[i]);
 }
 
-void dbg_print(const int *matr, int n, int m, int *A, int *JA, int *AN, int *ANi, int n_z_el, int n_z_rows)
+void print_list(struct IA *IA)
+{
+    struct IA *tmp = IA;
+
+    printf("\nANi: ");
+    if (tmp)
+        for (; tmp != NULL; tmp = tmp->next)
+            printf("%d ", tmp->i, &tmp);
+
+
+    tmp = IA;
+    printf("\nAN: ");
+    if (tmp)
+        for (; tmp != NULL; tmp = tmp->next)
+            printf("%d ", tmp->Nk, &tmp);
+}
+
+void print_advanced(const int *A, const int *JA, struct IA *IA, const int n_z_el)
 {
     printf("\nA: ");
     print_array(A, n_z_el);
@@ -26,13 +43,16 @@ void dbg_print(const int *matr, int n, int m, int *A, int *JA, int *AN, int *ANi
     printf("\nJA: ");
     print_array(JA, n_z_el);
 
-    printf("\nAN: ");
-    print_array(AN, n_z_rows);
+    print_list(IA);
 
-    printf("\nANi: ");
-    print_array(ANi, n_z_rows);
+    puts(" ");
+}
+
+void dbg_print(const int *matr, int n, int m, const int *A, const int *JA, const int *AN, const int *ANi, int n_z_el, int n_z_rows)
+{
+    //dbg_print_advanced(A, JA, AN, ANi, n_z_el, n_z_rows);
+
 
     printf("\nmatrix:\n");
     print_matrix(matr, n, m);
 }
-

@@ -65,12 +65,13 @@ void count_non_zero(const int *matr, int n, int m, int *non_zero_rows, int *non_
 }
 
 
-void convert_matrix(const int *matr, int n, int m, int *A, int *JA, int *AN, int *ANi, int n_z_el, int n_z_rows)
+void convert_matrix(const int *matr, int n, int m, int *A, int *JA, struct IA *IA)
 {
     int A_curr = 0;
     int An_curr = 0;
     int first_in_row = 1;
 
+// ANy rows to fill (check IA = NULL)
     for (int i = 0; i < n; i++)
     {
         first_in_row = 1;
@@ -83,9 +84,9 @@ void convert_matrix(const int *matr, int n, int m, int *A, int *JA, int *AN, int
                 if (first_in_row)
                 {
                     first_in_row = 0;
-                    AN[An_curr] = A_curr;
-                    ANi[An_curr] = i;
-                    An_curr++;
+                    IA->Nk = A_curr;
+                    IA->i = i;
+                    IA = IA->next;
                 }
                 A_curr++;
             }
@@ -101,66 +102,84 @@ void add_matrices_simple(const int *matr1, const int *matr2, int *matr3, int n, 
 }
 
 
-void add_matrices_advanced(const int *A1, const int *JA1, const int *AN1, const int *ANi1, int n_z_el1, int n_z_rows1,
-                           const int *A2, const int *JA2, const int *AN2, const int *ANi2, int n_z_el2, int n_z_rows2,
-                           int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3)
+void add_matrices_advanced(const int *A1, const int *JA1, struct IA *IA1, int n_z_el1,
+                           const int *A2, const int *JA2, struct IA *IA2, int n_z_el2,
+                           int *A3, int *JA3, struct IA *IA3, int *n_z_el3)
 {
     *n_z_el3 = 0;
-    *n_z_rows3 = 0;
-    int curr_i1 = 0, curr_i2 = 0;
 
-    while ((curr_i1 < n_z_rows1) && (curr_i2 < n_z_rows2))
+    struct IA *tmp1 = IA1, *tmp2 = IA2, *tmp3 = IA3;
+
+    while (tmp1 && tmp2)
     {
-        if (ANi1[curr_i1] < ANi2[curr_i2])
+        if (tmp1->i < tmp2->i)
         {
-            copy_row(A1, JA1, AN1, ANi1, curr_i1, n_z_rows1, n_z_el1, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
-            curr_i1++;
+            copy_row(A1, JA1, tmp1, n_z_el1, A3, JA3, tmp3, n_z_el3);
+            tmp1 = tmp1->next;
         }
-        else if (ANi2[curr_i2] < ANi1[curr_i1])
+        else if (tmp2->i < tmp1->i)
         {
-            copy_row(A2, JA2, AN2, ANi2, curr_i2, n_z_rows2, n_z_el2, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
-            curr_i2++;
+            copy_row(A2, JA2, tmp2, n_z_el2, A3, JA3, tmp3, n_z_el3);
+            tmp2 = tmp2->next;
         }
-        else // if equal
+        else
         {
-            add_rows(A1, JA1, AN1, ANi1, curr_i1, n_z_rows1, n_z_el1, A2, JA2, AN2, ANi2, curr_i2, n_z_rows2, n_z_el2, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
-            curr_i1++;
-            curr_i2++;
+            add_rows(A1, JA1, tmp1, n_z_el1, A2, JA2, tmp2, n_z_el2, A3, JA3, tmp3, n_z_el3);
+            tmp1 = tmp1->next;
+            tmp2 = tmp2->next;
         }
+        if (tmp3->next)
+            tmp3 = tmp3->next;
     }
 
-    // if some elements left in 1 or 2
-    while (curr_i1 < n_z_rows1)
+    while (tmp1)
     {
-        copy_row(A1, JA1, AN1, ANi1, curr_i1, n_z_rows1, n_z_el1, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
-        curr_i1++;
+        copy_row(A1, JA1, tmp1, n_z_el1, A3, JA3, tmp3, n_z_el3);
+        tmp1 = tmp1->next;
+
+        if (tmp3->next)
+            tmp3 = tmp3->next;
     }
-    while (curr_i2 < n_z_rows2)
+
+    while (tmp2)
     {
-        copy_row(A2, JA2, AN2, ANi2, curr_i2, n_z_rows2, n_z_el2, A3, JA3, AN3, ANi3, n_z_el3, n_z_rows3);
-        curr_i2++;
+        copy_row(A2, JA2, tmp2, n_z_el2, A3, JA3, tmp3, n_z_el3);
+        tmp2 = tmp2->next;
+
+        if (tmp3->next)
+            tmp3 = tmp3->next;
     }
 }
 
 
 // Copy row from 1st matrix to second
-void copy_row(const int *A1, const int *JA1, const int *AN1, const int *ANi1, int curr_i1, int max_i1, int max_iel,
-              int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3)
+void copy_row(const int *A1, const int *JA1, struct IA *IA1, int max_iel,
+              int *A3, int *JA3, struct IA *IA3, int *n_z_el3)
 {
     // Determine indexes of elements to copy
-    int i_from = AN1[curr_i1];
+    int i_from = IA1->Nk;
     int i_to;
 
-    if (curr_i1 == max_i1 - 1) // if last non-zero row
-        i_to = max_iel;
+    if (IA1->next)
+    {
+        i_to = (IA1->next)->Nk;
+    }
     else
-        i_to = AN1[curr_i1 + 1];
-    //NOTE do not take last one
+    {
+        i_to = max_iel;
+    }
 
+    // Allocate new row
+    if (IA3->i != -1)
+    {
+        IA3->next = malloc(sizeof(struct IA));
+        IA3 = IA3->next;
+        IA3->next = NULL;
+    }
 
     // Fill
-    ANi3[*n_z_rows3] = ANi1[curr_i1];
-    AN3[*n_z_rows3] = *n_z_el3;
+    IA3->i = IA1->i;
+    IA3->Nk = *n_z_el3;
 
     for (int i = i_from; i < i_to; i++)
     {
@@ -168,34 +187,40 @@ void copy_row(const int *A1, const int *JA1, const int *AN1, const int *ANi1, in
         JA3[*n_z_el3] = JA1[i];
         (*n_z_el3)++;
     }
-
-    (*n_z_rows3)++;
 }
 
-void add_rows(const int *A1, const int *JA1, const int *AN1, const int *ANi1, int curr_i1, int max_i1, int max_i1el,
-              const int *A2, const int *JA2, const int *AN2, const int *ANi2, int curr_i2, int max_i2, int max_i2el,
-              int *A3, int *JA3, int *AN3, int *ANi3, int *n_z_el3, int *n_z_rows3)
+void add_rows(const int *A1, const int *JA1, struct IA *IA1, int max_i1el,
+              const int *A2, const int *JA2, struct IA *IA2, int max_i2el,
+              int *A3, int *JA3, struct IA *IA3, int *n_z_el3)
 {
 
-    ANi3[*n_z_rows3] = ANi1[curr_i1];
-    AN3[*n_z_rows3] = *n_z_el3;
+    // Allocate new row
+    if (IA3->i != -1)
+    {
+        IA3->next = malloc(sizeof(struct IA));
+        IA3 = IA3->next;
+        IA3->next = NULL;
+    }
+
+    IA3->i = IA1->i;
+    IA3->Nk = *n_z_el3;
 
     // Find indexes
-    int i1_from = AN1[curr_i1];
+    int i1_from = IA1->Nk;
     int i1_to, i1 = i1_from;
 
-    if (curr_i1 == max_i1 - 1) // if last non-zero row
-        i1_to = max_i1el;
+    if (IA1->next)
+        i1_to = (IA1->next)->Nk;
     else
-        i1_to = AN1[curr_i1 + 1];
+        i1_to = max_i1el;
 
-    int i2_from = AN2[curr_i2];
+    int i2_from = IA2->Nk;
     int i2_to, i2 = i2_from;
 
-    if (curr_i2 == max_i2 - 1) // if last non-zero row
-        i2_to = max_i2el;
+    if (IA2->next)
+        i2_to = (IA2->next)->Nk;
     else
-        i2_to = AN2[curr_i2 + 1];
+        i2_to = max_i2el;
 
     // Add rows
     while ((i1 < i1_to) && (i2 < i2_to))

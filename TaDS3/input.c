@@ -36,4 +36,3 @@ void input_size(char *msg, int *n, int *m)
         fflush(stdin);
     }
 }
-
