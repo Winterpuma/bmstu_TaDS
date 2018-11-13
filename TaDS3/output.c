@@ -47,12 +47,3 @@ void print_advanced(const int *A, const int *JA, struct IA *IA, const int n_z_el
 
     puts(" ");
 }
-
-void dbg_print(const int *matr, int n, int m, const int *A, const int *JA, const int *AN, const int *ANi, int n_z_el, int n_z_rows)
-{
-    //dbg_print_advanced(A, JA, AN, ANi, n_z_el, n_z_rows);
-
-
-    printf("\nmatrix:\n");
-    print_matrix(matr, n, m);
-}
