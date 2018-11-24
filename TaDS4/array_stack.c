@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "array_stack.h"
 
 int add_to_arr(char **p_curr, char *p_end, char value)

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "array_stack.h"
+#include "list_stack.h"
 
 #define N 5
 
@@ -9,6 +10,8 @@ int main()
 
     char arrStack[N];
     char *p_curr = arrStack - 1;
+
+    struct node *last_element = NULL;
 
     while (1)
     {
@@ -42,6 +45,15 @@ int main()
                     break;
                 case 4:
                     print_arr(arrStack, p_curr);
+                    break;
+                case 5:
+                    last_element = add_to_list(last_element);
+                    break;
+                case 6:
+                    last_element = remove_from_list(last_element);
+                    break;
+                case 7:
+                    print_list(last_element);
                     break;
                 default:
                     printf("Invalid input.\n");
