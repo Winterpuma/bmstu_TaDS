@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include "array_stack.h"
 #include "list_stack.h"
+#include "parentheses.h"
 
 #define N 5
 
 int main()
 {
-    int operation;
+    int operation, result;
 
     char arrStack[N];
     char *p_curr = arrStack - 1;
@@ -37,6 +38,13 @@ int main()
             {
                 case 0:
                     return 0;
+                case 1:
+                    result = check_parentheses();
+                    if (!result)
+                        printf("Correct expression.\n");
+                    else
+                        printf("Incorrect expression.\n");
+                    break;
                 case 2:
                     add_to_arr(&p_curr, arrStack + N - 1, '1');
                     break;
@@ -47,7 +55,7 @@ int main()
                     print_arr(arrStack, p_curr);
                     break;
                 case 5:
-                    last_element = add_to_list(last_element);
+                    last_element = add_to_list(last_element, '1');
                     break;
                 case 6:
                     last_element = remove_from_list(last_element);

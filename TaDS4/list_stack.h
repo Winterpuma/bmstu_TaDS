@@ -7,7 +7,7 @@ struct node
     struct node *previous_el;
 };
 
-struct node* add_to_list(struct node *last_el);
+struct node* add_to_list(struct node *last_el, char value);
 struct node* remove_from_list(struct node *last_el);
 void print_list(struct node *last_el);
 

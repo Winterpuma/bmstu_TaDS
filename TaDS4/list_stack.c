@@ -3,10 +3,10 @@
 #include "list_stack.h"
 
 // returns address of new last element
-struct node* add_to_list(struct node *last_el)
+struct node* add_to_list(struct node *last_el, char value)
 {
     struct node *tmp = malloc(sizeof(struct node));
-    tmp->value = '1';
+    tmp->value = value;
     tmp->previous_el = last_el;
 
     return tmp;
