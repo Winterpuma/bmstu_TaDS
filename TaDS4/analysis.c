@@ -5,8 +5,6 @@
 #include "array_stack.h"
 #include "list_stack.h"
 
-#define N 99
-
 unsigned long long tick(void)
 {
     unsigned long long tmp;
@@ -14,8 +12,9 @@ unsigned long long tick(void)
     return tmp;
 }
 
-void analise()
+void analyse(int N)
 {
+    printf("--------Analyse for %d size--------\n", N);
     unsigned long long duration;
     unsigned long long t1, t2;
 
@@ -24,6 +23,8 @@ void analise()
 
     struct node *last_element = NULL;
 
+    printf("Array stack size: %d\n", sizeof(arrStack) + sizeof(p_curr));
+    printf("List stack size: %d to %d\n", sizeof(last_element), sizeof(last_element) + sizeof(struct node)*N);
     printf("PUSH operation:\n");
     t1 = tick();
     for(int i = 0; i < N; i++)
@@ -32,7 +33,7 @@ void analise()
     t2 = tick();
     duration = (unsigned long long) (t2-t1);
 
-    printf("\tArray stack: %llu\n", duration);
+    printf("\tArray stack: %15llu\n", duration);
     t1 = tick();
     for(int i = 0; i < N; i++)
         last_element = push_list(last_element, '1', 0);
@@ -40,7 +41,7 @@ void analise()
     t2 = tick();
     duration = (unsigned long long) (t2-t1);
 
-    printf("\tList stack: %llu\n", duration);
+    printf("\tList stack : %15llu\n", duration);
 
     printf("POP operation:\n");
     t1 = tick();
@@ -49,7 +50,7 @@ void analise()
 
     t2 = tick();
     duration = (unsigned long long) (t2-t1);
-    printf("\tArray stack: %llu\n", duration);
+    printf("\tArray stack: %15llu\n", duration);
 
     t1 = tick();
     for(int i = 0; i < N; i++)
@@ -57,5 +58,6 @@ void analise()
 
     t2 = tick();
     duration = (unsigned long long) (t2-t1);
-    printf("\tList stack: %llu\n", duration);
+    printf("\tList stack : %15llu\n\n", duration);
+
 }

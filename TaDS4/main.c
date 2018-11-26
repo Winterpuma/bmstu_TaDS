@@ -77,7 +77,8 @@ int main()
                     print_list(last_element);
                     break;
                 case 8:
-                    analise();
+                    analyse(1000);
+                    analyse(10000);
                     break;
                 default:
                     printf("Invalid input.\n");
