@@ -11,7 +11,7 @@ void init_free_area()
 }
 
 // returns address of new last element
-struct node* add_to_list(struct node *last_el, char value)
+struct node* push_list(struct node *last_el, char value)
 {
     struct node *tmp = malloc(sizeof(struct node));
     tmp->value = value;
@@ -24,7 +24,7 @@ struct node* add_to_list(struct node *last_el, char value)
 }
 
 // returns address of new last element
-struct node* remove_from_list(struct node *last_el)
+struct node* pop_list(struct node *last_el)
 {
     if (last_el == NULL)
     {

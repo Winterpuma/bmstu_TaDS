@@ -24,12 +24,12 @@ int main()
                "0 - Exit\n\t"
                "1 - Check expression for\n"
                "Array stack:\n\t"
-               "2 - Add to array stack\n\t"
-               "3 - Remove from stack\n\t"
+               "2 - Push to array stack\n\t"
+               "3 - Pop from stack\n\t"
                "4 - Output stack\n"
                "List stack:\n\t"
-               "5 - Add to stack\n\t"
-               "6 - Remove from stack\n\t"
+               "5 - Push to stack\n\t"
+               "6 - Pop from stack\n\t"
                "7 - Output stack\n");
 
         fflush(stdin);
@@ -48,19 +48,19 @@ int main()
                         printf("Incorrect expression.\n");
                     break;
                 case 2:
-                    add_to_arr(&p_curr, arrStack + N - 1, '1');
+                    push_arr(&p_curr, arrStack + N - 1, '1');
                     break;
                 case 3:
-                    remove_from_arr(&p_curr, arrStack);
+                    pop_arr(&p_curr, arrStack);
                     break;
                 case 4:
                     print_arr(arrStack, p_curr);
                     break;
                 case 5:
-                    last_element = add_to_list(last_element, '1');
+                    last_element = push_list(last_element, '1');
                     break;
                 case 6:
-                    last_element = remove_from_list(last_element);
+                    last_element = pop_list(last_element);
                     break;
                 case 7:
                     print_list(last_element);

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "array_stack.h"
 
-int add_to_arr(char **p_curr, char *p_end, char value)
+int push_arr(char **p_curr, char *p_end, char value)
 {
     if (*p_curr >= p_end)
     {
@@ -14,10 +14,10 @@ int add_to_arr(char **p_curr, char *p_end, char value)
     return 0;
 }
 
-int remove_from_arr(char **p_curr, char *p_beg)
+int pop_arr(char **p_curr, char *p_beg)
 {
-    if (*p_curr < p_beg)
-        return -1; // Array is empty
+    if (*p_curr < p_beg) // Array is empty
+        return -1;
 
     (*p_curr)--;
     return 0;

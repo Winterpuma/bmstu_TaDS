@@ -22,14 +22,14 @@ int check_parentheses()
     for (char *ptr = str; *ptr; ptr++)
     {
         if (*ptr == '(' || *ptr == '[' || *ptr == '{')
-            last_el = add_to_list(last_el, *ptr);
+            last_el = push_list(last_el, *ptr);
         else if (*ptr == ')' || *ptr == ']' || *ptr == '}')
         {
             if (!last_el)
                 return -1;
 
             if ((*ptr == ')' && last_el->value == '(') || (*ptr == ']' && last_el->value == '[') || (*ptr == '}' && last_el->value == '{'))
-                last_el = remove_from_list(last_el);
+                last_el = pop_list(last_el);
             else
                 return -1;
         }
