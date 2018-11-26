@@ -9,6 +9,7 @@
 int main()
 {
     int operation, result;
+    char ch;
 
     char arrStack[N];
     char *p_curr = arrStack - 1;
@@ -48,7 +49,12 @@ int main()
                         printf("Incorrect expression.\n");
                     break;
                 case 2:
-                    push_arr(&p_curr, arrStack + N - 1, '1');
+                    printf("Input single char: ");
+                    fflush(stdin);
+                    ch = getchar();
+                    result = push_arr(&p_curr, arrStack + N - 1, ch);
+                    if (result == -1)
+                        printf("Array is empty.\n");
                     break;
                 case 3:
                     pop_arr(&p_curr, arrStack);
@@ -57,7 +63,10 @@ int main()
                     print_arr(arrStack, p_curr);
                     break;
                 case 5:
-                    last_element = push_list(last_element, '1');
+                    printf("Input single char: ");
+                    fflush(stdin);
+                    ch = getchar();
+                    last_element = push_list(last_element, ch);
                     break;
                 case 6:
                     last_element = pop_list(last_element);
