@@ -3,6 +3,7 @@
 #include "array_stack.h"
 #include "list_stack.h"
 #include "parentheses.h"
+#include "analysis.h"
 
 #define N 5
 
@@ -23,7 +24,8 @@ int main()
 
         printf("\nMENU (choose operation):\n\t"
                "0 - Exit\n\t"
-               "1 - Check expression for\n"
+               "1 - Check expression for correctness\n\t"
+               "8 - Time analysis\n"
                "Array stack:\n\t"
                "2 - Push to array stack\n\t"
                "3 - Pop from stack\n\t"
@@ -52,12 +54,12 @@ int main()
                     printf("Input single char: ");
                     fflush(stdin);
                     ch = getchar();
-                    result = push_arr(&p_curr, arrStack + N - 1, ch);
-                    if (result == -1)
-                        printf("Array is empty.\n");
+                    push_arr(&p_curr, arrStack + N - 1, ch);
                     break;
                 case 3:
-                    pop_arr(&p_curr, arrStack);
+                    result = pop_arr(&p_curr, arrStack);
+                    if (result == -1)
+                        printf("Array is empty.\n");
                     break;
                 case 4:
                     print_arr(arrStack, p_curr);
@@ -66,13 +68,16 @@ int main()
                     printf("Input single char: ");
                     fflush(stdin);
                     ch = getchar();
-                    last_element = push_list(last_element, ch);
+                    last_element = push_list(last_element, ch, 1);
                     break;
                 case 6:
-                    last_element = pop_list(last_element);
+                    last_element = pop_list(last_element, 1);
                     break;
                 case 7:
                     print_list(last_element);
+                    break;
+                case 8:
+                    analise();
                     break;
                 default:
                     printf("Invalid input.\n");

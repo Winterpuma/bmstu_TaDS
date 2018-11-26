@@ -11,20 +11,20 @@ void init_free_area()
 }
 
 // returns address of new last element
-struct node* push_list(struct node *last_el, char value)
+struct node* push_list(struct node *last_el, char value, int fl_an)
 {
     struct node *tmp = malloc(sizeof(struct node));
     tmp->value = value;
     tmp->previous_el = last_el;
 
-    if (n > 0)
+    if (n > 0 && fl_an)
         free_area[n--] = NULL;
 
     return tmp;
 }
 
 // returns address of new last element
-struct node* pop_list(struct node *last_el)
+struct node* pop_list(struct node *last_el, int fl_an)
 {
     if (last_el == NULL)
     {
@@ -33,7 +33,10 @@ struct node* pop_list(struct node *last_el)
     }
 
     struct node *tmp = last_el->previous_el;
-    free_area[n++] = (void*) last_el;
+
+    if (fl_an)
+        free_area[n++] = (void *) last_el;
+
     free(last_el);
 
     return tmp;
@@ -50,4 +53,5 @@ void print_list(struct node *last_el)
     printf("\nFree area:\n");
     for(int j = 0; j < n; j++)
         printf("%p ", free_area[j]);
+    puts("");
 }
