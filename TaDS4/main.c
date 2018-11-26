@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "array_stack.h"
 #include "list_stack.h"
 #include "parentheses.h"
@@ -13,6 +14,7 @@ int main()
     char *p_curr = arrStack - 1;
 
     struct node *last_element = NULL;
+    init_free_area();
 
     while (1)
     {
