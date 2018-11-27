@@ -22,7 +22,7 @@ int check_parentheses()
     for (char *ptr = str; *ptr; ptr++)
     {
         if (*ptr == '(' || *ptr == '[' || *ptr == '{')
-            last_el = push_list(last_el, *ptr, 0);
+            last_el = push_list(last_el, *ptr);
         else if (*ptr == ')' || *ptr == ']' || *ptr == '}')
         {
             if (!last_el)

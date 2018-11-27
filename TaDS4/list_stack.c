@@ -11,14 +11,11 @@ void init_free_area()
 }
 
 // returns address of new last element
-struct node* push_list(struct node *last_el, char value, int fl_an)
+struct node* push_list(struct node *last_el, char value)
 {
     struct node *tmp = malloc(sizeof(struct node));
     tmp->value = value;
     tmp->previous_el = last_el;
-
-    if (n > 0 && fl_an)
-        free_area[n--] = NULL;
 
     return tmp;
 }

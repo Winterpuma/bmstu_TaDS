@@ -12,7 +12,7 @@ struct node
 };
 
 struct node* pop_list(struct node *last_el, int fl_an);
-struct node* push_list(struct node *last_el, char value, int fl_an);
+struct node* push_list(struct node *last_el, char value);
 void print_list(struct node *last_el);
 
 #endif //TADS4_LIST_STACK_H

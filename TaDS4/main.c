@@ -68,7 +68,7 @@ int main()
                     printf("Input single char: ");
                     fflush(stdin);
                     ch = getchar();
-                    last_element = push_list(last_element, ch, 1);
+                    last_element = push_list(last_element, ch);
                     break;
                 case 6:
                     last_element = pop_list(last_element, 1);

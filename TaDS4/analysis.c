@@ -36,7 +36,7 @@ void analyse(int N)
     printf("\tArray stack: %15llu\n", duration);
     t1 = tick();
     for(int i = 0; i < N; i++)
-        last_element = push_list(last_element, '1', 0);
+        last_element = push_list(last_element, '1');
 
     t2 = tick();
     duration = (unsigned long long) (t2-t1);
