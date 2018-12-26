@@ -1,0 +1,6 @@
+digraph { 
+	rankdir=LR; 
+	1 -> 2;
+	2 -> 3;
+	3 -> 1;
+	1 -> 2[color=blue, penwidth=2.0];	2 -> 3[color=blue, penwidth=2.0];}
